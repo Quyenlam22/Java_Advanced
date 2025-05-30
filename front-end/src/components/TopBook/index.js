@@ -3,9 +3,38 @@ import "./TopBook.scss";
 import cat1 from "../../images/cat-1.jpg";
 import { Link } from "react-router-dom";
 import { RightOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, updateQuantity } from "../../actions/cart";
+import { useEffect, useState } from "react";
+import { getBook } from "../../services/bookService";
+import Paginate from "../Paginate";
+import { paginate } from "../../utils/paginate";
 
 function TopBook () {
+    const [data, setData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const dispatch = useDispatch();
+    const cart = useSelector(state => state.cartReducer);
+
+    useEffect(() => {
+        const fetchApi = async () => {
+            const result = await getBook();
+            setData(result)
+        }
+        fetchApi()
+    }, [])
+
+    const handleClick = (item) => {
+        if(cart.some(itemCart => itemCart.id === item.id)) {
+            dispatch(updateQuantity(item.id));
+        }
+        else {
+            dispatch(addToCart(item));
+        }
+    }
+
+    const pagination = paginate(data, currentPage, 3);
+
     return (
         <>
             <Row gutter={[20, 20]} className="mt-5">
@@ -17,103 +46,28 @@ function TopBook () {
                 </Col>
             </Row>
             <Row gutter={[20, 20]}>
-                <Col span={8}>
-                    <div className="top-book">
-                        <div className="top-book__thumbnail">
-                            <img src={cat1} alt={"Title"}/>
-                        </div>
-                        <span className="top-book__discount">15% OFF</span>
-                        <div className="top-book__content">
-                            <h2 className="top-book__title">Mới phát hành</h2>
-                            <div className="top-book__rate"><Rate className="top-book__rate" allowHalf defaultValue={4.5}/> <span>4.8</span></div>
-                            <div className="top-book__price">{(1000000).toLocaleString()}đ</div>
-                            <Button type="primary" className="top-book__order">
-                                <Link size="large"><ShoppingCartOutlined /> Thêm vào giỏ hàng</Link>
-                            </Button>
-                        </div>
-                    </div>
-                </Col>
-                <Col span={8}>
-                    <div className="top-book">
-                        <div className="top-book__thumbnail">
-                            <img src={cat1} alt={"Title"}/>
-                        </div>
-                        <span className="top-book__discount">15% OFF</span>
-                        <div className="top-book__content">
-                            <h2 className="top-book__title">Mới phát hành</h2>
-                            <div className="top-book__rate"><Rate className="top-book__rate" allowHalf defaultValue={4.5}/> <span>4.8</span></div>
-                            <div className="top-book__price">{(1000000).toLocaleString()}đ</div>
-                            <Button type="primary" className="top-book__order">
-                                <Link size="large"><ShoppingCartOutlined /> Thêm vào giỏ hàng</Link>
-                            </Button>
-                        </div>
-                    </div>
-                </Col>
-                <Col span={8}>
-                    <div className="top-book">
-                        <div className="top-book__thumbnail">
-                            <img src={cat1} alt={"Title"}/>
-                        </div>
-                        <span className="top-book__discount">15% OFF</span>
-                        <div className="top-book__content">
-                            <h2 className="top-book__title">Mới phát hành</h2>
-                            <div className="top-book__rate"><Rate className="top-book__rate" allowHalf defaultValue={4.5}/> <span>4.8</span></div>
-                            <div className="top-book__price">{(1000000).toLocaleString()}đ</div>
-                            <Button type="primary" className="top-book__order">
-                                <Link size="large"><ShoppingCartOutlined /> Thêm vào giỏ hàng</Link>
-                            </Button>
-                        </div>
-                    </div>
-                </Col>
-                <Col span={8}>
-                    <div className="top-book">
-                        <div className="top-book__thumbnail">
-                            <img src={cat1} alt={"Title"}/>
-                        </div>
-                        <span className="top-book__discount">15% OFF</span>
-                        <div className="top-book__content">
-                            <h2 className="top-book__title">Mới phát hành</h2>
-                            <div className="top-book__rate"><Rate className="top-book__rate" allowHalf defaultValue={4.5}/> <span>4.8</span></div>
-                            <div className="top-book__price">{(1000000).toLocaleString()}đ</div>
-                            <Button type="primary" className="top-book__order">
-                                <Link size="large"><ShoppingCartOutlined /> Thêm vào giỏ hàng</Link>
-                            </Button>
-                        </div>
-                    </div>
-                </Col>
-                <Col span={8}>
-                    <div className="top-book">
-                        <div className="top-book__thumbnail">
-                            <img src={cat1} alt={"Title"}/>
-                        </div>
-                        <span className="top-book__discount">15% OFF</span>
-                        <div className="top-book__content">
-                            <h2 className="top-book__title">Mới phát hành</h2>
-                            <div className="top-book__rate"><Rate className="top-book__rate" allowHalf defaultValue={4.5}/> <span>4.8</span></div>
-                            <div className="top-book__price">{(1000000).toLocaleString()}đ</div>
-                            <Button type="primary" className="top-book__order">
-                                <Link size="large"><ShoppingCartOutlined /> Thêm vào giỏ hàng</Link>
-                            </Button>
-                        </div>
-                    </div>
-                </Col>
-                <Col span={8}>
-                    <div className="top-book">
-                        <div className="top-book__thumbnail">
-                            <img src={cat1} alt={"Title"}/>
-                        </div>
-                        <span className="top-book__discount">15% OFF</span>
-                        <div className="top-book__content">
-                            <h2 className="top-book__title">Mới phát hành</h2>
-                            <div className="top-book__rate"><Rate className="top-book__rate" allowHalf defaultValue={4.5}/> <span>4.8</span></div>
-                            <div className="top-book__price">{(1000000).toLocaleString()}đ</div>
-                            <Button type="primary" className="top-book__order">
-                                <Link size="large"><ShoppingCartOutlined /> Thêm vào giỏ hàng</Link>
-                            </Button>
-                        </div>
-                    </div>
-                </Col>
+                {pagination.currentItems && (
+                    pagination.currentItems.map(item => (
+                        <Col span={8} key={item.id}>
+                            <div className="top-book">
+                                <div className="top-book__thumbnail">
+                                    <img src={cat1} alt={item.title}/>
+                                </div>
+                                <span className="top-book__discount">{item.discount*100}% OFF</span>
+                                <div className="top-book__content">
+                                    <h2 className="top-book__title">{item.title}</h2>
+                                    <div className="top-book__rate"><Rate className="top-book__rate" allowHalf defaultValue={4.5}/> <span>4.8</span></div>
+                                    <div className="top-book__price-new">{((item.price) * (1-item.discount)).toFixed(2)} đ</div>                                    <div className="top-book__price">{(item.price)} đ</div>
+                                    <Button onClick={() => handleClick(item)} type="primary" className="top-book__order">
+                                        <Link size="large"><ShoppingCartOutlined /> Thêm vào giỏ hàng</Link>
+                                    </Button>
+                                </div>
+                            </div>
+                        </Col>
+                    ))
+                )}
             </Row>
+            <Paginate pagination={pagination} setCurrentPage={setCurrentPage}/>
         </>
     )
 }

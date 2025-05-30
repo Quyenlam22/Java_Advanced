@@ -5,23 +5,24 @@ import logo from "../../images/logo.png";
 import "./LayoutDefault.scss";
 import { BankOutlined, ClockCircleOutlined, CreditCardOutlined, EnvironmentOutlined, FacebookOutlined, HomeOutlined, IdcardOutlined, InstagramOutlined, MailOutlined, PhoneOutlined, PinterestOutlined, ShoppingCartOutlined, TwitterOutlined, UnorderedListOutlined, UserOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
+import CartMini from "../../components/Cart/CartMini";
+import Login from "../../components/Login";
 const { Search } = Input;
 
 const items = [
     {
         key: "/",
         icon: <HomeOutlined />,
-        label: <NavLink to="/">Home</NavLink>
+        label: <NavLink to="/">Trang chủ</NavLink>
     },
     {
         key: "categories",
         icon: <UnorderedListOutlined />,
-        label: <NavLink to="categories">Category</NavLink>
+        label: <NavLink to="categories">Thể loại</NavLink>
     },
     {
         key: "cart",
-        icon: <ShoppingCartOutlined />,
-        label: <NavLink to="cart">Cart</NavLink>
+        label: <NavLink to="cart"><CartMini/></NavLink>
     }
 ]
 
@@ -40,14 +41,14 @@ const login = [
 
 const unLogin = [
     {
-        key: "/",
+        key: "login",
         // icon: <HomeOutlined />,
-        label: <NavLink to="/">Đăng nhập</NavLink>
+        label: <Login/>
     },
     {
-        key: "categories",
+        key: "register",
         // icon: <UnorderedListOutlined />,
-        label: <NavLink to="categories">Đăng ký</NavLink>
+        label: 'Đăng ký'
     }
 ]
 
@@ -82,7 +83,7 @@ function LayoutDefault () {
                         // style={{ flex: 1, minWidth: 0 }}
                     />
                     <div className="auth">
-                        <Dropdown menu={{ items: login }} placement="bottom">
+                        <Dropdown menu={{ items: unLogin }} placement="bottom">
                             <Button><UserOutlined /></Button>
                         </Dropdown>
                     </div>
