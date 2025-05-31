@@ -11,6 +11,24 @@
       "name": "Fantasy",
       "description": "Books filled with magical and mythical adventures.",
       "created_at": "2025-05-02T11:00:00Z"
+    },
+    {
+      "id": 3,
+      "name": "Mystery",
+      "description": "Books that involve solving crimes or uncovering secrets.",
+      "created_at": "2025-05-03T09:30:00Z"
+    },
+    {
+      "id": 4,
+      "name": "Romance",
+      "description": "Books centered around love stories and emotional relationships.",
+      "created_at": "2025-05-04T14:15:00Z"
+    },
+    {
+      "id": 5,
+      "name": "Historical Fiction",
+      "description": "Books set in historical settings with fictional narratives.",
+      "created_at": "2025-05-05T16:45:00Z"
     }
   ],
   "authors": [
@@ -37,6 +55,22 @@
       "profile_image": "herbert.jpg",
       "created_at": "2025-05-05T10:30:00Z",
       "updated_at": "2025-05-05T10:30:00Z"
+    },
+    {
+      "id": 4,
+      "name": "Agatha Christie",
+      "bio": "Famous for her detective novels and short stories.",
+      "profile_image": "christie.jpg",
+      "created_at": "2025-05-08T09:00:00Z",
+      "updated_at": "2025-05-08T09:00:00Z"
+    },
+    {
+      "id": 5,
+      "name": "Jane Austen",
+      "bio": "English novelist known primarily for her six major novels.",
+      "profile_image": "austen.jpg",
+      "created_at": "2025-05-08T10:00:00Z",
+      "updated_at": "2025-05-08T10:00:00Z"
     }
   ],
   "books": [
@@ -130,6 +164,45 @@
       "thumbnail": "harry_potter3.jpg",
       "created_at": "2025-05-06T13:00:00Z",
       "updated_at": "2025-05-06T13:00:00Z"
+    },
+    {
+      "id": 8,
+      "title": "Murder on the Orient Express",
+      "description": "Detective Hercule Poirot investigates a murder on a snowbound train.",
+      "price": 15.99,
+      "discount": 0.1,
+      "stock": 20,
+      "category_id": 6,
+      "author_id": 4,
+      "thumbnail": "orient_express.jpg",
+      "created_at": "2025-05-08T14:00:00Z",
+      "updated_at": "2025-05-08T14:00:00Z"
+    },
+    {
+      "id": 9,
+      "title": "Pride and Prejudice",
+      "description": "A romantic novel about manners and matrimonial machinations.",
+      "price": 13.99,
+      "discount": 0.05,
+      "stock": 18,
+      "category_id": 7,
+      "author_id": 5,
+      "thumbnail": "pride_prejudice.jpg",
+      "created_at": "2025-05-08T15:00:00Z",
+      "updated_at": "2025-05-08T15:00:00Z"
+    },
+    {
+      "id": 10,
+      "title": "The Book Thief",
+      "description": "A historical novel about a young girl's life in Nazi Germany.",
+      "price": 17.99,
+      "discount": 0.2,
+      "stock": 16,
+      "category_id": 8,
+      "author_id": 5,
+      "thumbnail": "book_thief.jpg",
+      "created_at": "2025-05-08T16:00:00Z",
+      "updated_at": "2025-05-08T16:00:00Z"
     }
   ],
   "users": [
@@ -143,7 +216,8 @@
       "address": "123 Đường Lê Lợi, Quận 1, TP.HCM",
       "phone": "0901234567",
       "created_at": "2024-12-01T08:00:00Z",
-      "updated_at": "2025-01-10T12:00:00Z"
+      "updated_at": "2025-01-10T12:00:00Z",
+      "token": "b7f92e1a84e14f98bb9cbce4a7131a40"
     },
     {
       "id": 2,
@@ -155,7 +229,8 @@
       "address": "456 Đường Nguyễn Trãi, Hà Nội",
       "phone": "0912345678",
       "created_at": "2025-01-05T09:15:00Z",
-      "updated_at": "2025-01-05T09:15:00Z"
+      "updated_at": "2025-01-05T09:15:00Z",
+      "token": "d8a45c7f22ad420198edcfb4d7a58b5f"
     },
     {
       "id": 3,
@@ -167,7 +242,8 @@
       "address": "789 Trần Hưng Đạo, TP. Đà Nẵng",
       "phone": "0987654321",
       "created_at": "2025-02-20T14:30:00Z",
-      "updated_at": "2025-03-01T11:45:00Z"
+      "updated_at": "2025-03-01T11:45:00Z",
+      "token": "9cae5f6bd4a64eb6ae5a77fd9a4e5d92"
     }
   ]
 }

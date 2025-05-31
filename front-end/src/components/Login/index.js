@@ -1,8 +1,16 @@
 import { Button, Checkbox, Form, Input, Modal, notification } from "antd";
 import { useState } from "react";
-import { loginPost } from "../../services/authService";
+import { checkLogin } from "../../services/authService";
+// import { loginPost } from "../../services/authService";
+import Cookies from 'js-cookie';
 
-function Login () {
+const rules = [{ 
+    required: true, 
+    message: 'Vui lòng không để trống!' 
+}];
+
+function Login (props) {
+    const {setUsername} = props;
     const [isModalOpen, setIsModalOpen] = useState(false);
     // const [form] = Form.useForm();
     const [api, contextHolder] = notification.useNotification();
@@ -30,17 +38,24 @@ function Login () {
     };
     const onCancel = () => {
         setIsModalOpen(false);
+        // form.resetFields();
     }
 
     const onFinish = async (values) => {
-        // const result = await loginPost(values);
-        openNotification('Le Van A');
-        // openNotification('');
+        const result = await checkLogin(values.username, values.password);
 
-        // if(!result){
-        //     // openNotification("Hello");
-        // }
+        if(result.length > 0){
+            setUsername(result[0].full_name);
+            setIsModalOpen(false);
+            Cookies.set('token', result[0].token, { expires: 7 })
+            Cookies.set('full_name', result[0].full_name, { expires: 7 })
+            openNotification(result[0].full_name);
+        }
+        else {
+            openNotification();
+        }
     };
+
     const onFinishFailed = errorInfo => {
         console.log('Failed:', errorInfo);
     };
@@ -48,8 +63,7 @@ function Login () {
     return (
         <>
             {contextHolder}
-
-            <p onClick={showModal}>Đăng nhập</p>
+            <div onClick={showModal}>Đăng nhập</div>
             <Modal
                 title="Đăng nhập tài khoản"
                 open={isModalOpen}
@@ -61,13 +75,14 @@ function Login () {
                     initialValues={{ remember: true }}
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
-                    labelCol={{ span: 6 }}
-                    wrapperCol={{ span: 18 }}
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
                 >
                     <Form.Item
                         label="Tên tài khoản"
                         name="username"
-                        rules={[{ required: true, message: 'Vui lòng nhập tài khoản!' }]}
+                        rules={rules}
+                        preserve={true}
                     >
                         <Input />
                     </Form.Item>
@@ -75,7 +90,7 @@ function Login () {
                     <Form.Item
                         label="Mật khẩu"
                         name="password"
-                        rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
+                        rules={rules}
                     >
                         <Input.Password />
                     </Form.Item>

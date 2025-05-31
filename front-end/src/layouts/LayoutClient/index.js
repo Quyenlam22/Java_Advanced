@@ -1,12 +1,16 @@
-import { Link, NavLink, Outlet } from "react-router-dom"
-import { Button, Dropdown, Layout, Menu } from "antd";
+import Cookies from 'js-cookie';
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom"
+import { Button, Col, Dropdown, Layout, Menu, Row } from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
 import logo from "../../images/logo.png";
 import "./LayoutDefault.scss";
-import { BankOutlined, ClockCircleOutlined, CreditCardOutlined, EnvironmentOutlined, FacebookOutlined, HomeOutlined, IdcardOutlined, InstagramOutlined, MailOutlined, PhoneOutlined, PinterestOutlined, ShoppingCartOutlined, TwitterOutlined, UnorderedListOutlined, UserOutlined } from '@ant-design/icons';
+import { BankOutlined, ClockCircleOutlined, CreditCardOutlined, EnvironmentOutlined, FacebookOutlined, HomeOutlined, IdcardOutlined, InstagramOutlined, MailOutlined, PhoneOutlined, PinterestOutlined, TwitterOutlined, UserOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
 import CartMini from "../../components/Cart/CartMini";
 import Login from "../../components/Login";
+import { useState } from 'react';
+import Logout from '../../components/Logout';
+import CategoryMini from '../../components/Category/CategoryMini';
 const { Search } = Input;
 
 const items = [
@@ -16,44 +20,45 @@ const items = [
         label: <NavLink to="/">Trang chủ</NavLink>
     },
     {
-        key: "categories",
-        icon: <UnorderedListOutlined />,
-        label: <NavLink to="categories">Thể loại</NavLink>
+        key: "/categories",
+        label: <CategoryMini/>
     },
     {
-        key: "cart",
+        key: "/cart",
         label: <NavLink to="cart"><CartMini/></NavLink>
     }
 ]
 
-const login = [
-    {
-        key: "userinfo",
-        // icon: <HomeOutlined />,
-        label: <NavLink to="user-info">Thông tin tài khoản</NavLink>
-    },
-    {
-        key: "logout",
-        // icon: <UnorderedListOutlined />,
-        label: <NavLink to="logout">Đăng xuất</NavLink>
-    }
-]
-
-const unLogin = [
-    {
-        key: "login",
-        // icon: <HomeOutlined />,
-        label: <Login/>
-    },
-    {
-        key: "register",
-        // icon: <UnorderedListOutlined />,
-        label: 'Đăng ký'
-    }
-]
-
 function LayoutDefault () {
-    // const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
+    const token = Cookies.get('token');
+    const fullName = Cookies.get('full_name') || "";
+    const [username, setUsername] = useState(fullName);
+
+    const location = useLocation();
+    const selectedKey = location.pathname.split('/')[1]; 
+
+    const login = [
+        {
+            key: "userinfo",
+            label: <NavLink to="user-info">Thông tin tài khoản</NavLink>
+        },
+        {
+            key: "logout",
+            label: <Logout setUsername={setUsername}/>
+        }
+    ]
+
+    const unLogin = [
+        {
+            key: "login",
+            label: <Login setUsername={setUsername}/>
+        },
+        {
+            key: "register",
+            label: 'Đăng ký'
+        }
+    ]
+
     const onSearch = (value, _e, info) =>
         console.log(info === null || info === void 0 ? void 0 : info.source, value
     );
@@ -61,32 +66,40 @@ function LayoutDefault () {
         <>
             <Layout>
                 <header className="header">
-                    <div className="header__logo">
-                        <img src={logo} alt="Logo"/>
-                    </div>
-
-                    <div className="header__search">
-                        <Search
-                            placeholder="Nhập từ khóa tìm kiếm"
-                            enterButton="Tìm kiếm"
-                            size="large"
-                            allowClear
-                            // suffix={<AudioOutlined/>}
-                            onSearch={onSearch}
-                        />
-                    </div>
-                    
-                    <Menu className="header__menu"
-                        mode="horizontal"
-                        defaultSelectedKeys={['/']}
-                        items={items}
-                        // style={{ flex: 1, minWidth: 0 }}
-                    />
-                    <div className="auth">
-                        <Dropdown menu={{ items: unLogin }} placement="bottom">
-                            <Button><UserOutlined /></Button>
-                        </Dropdown>
-                    </div>
+                    <Row gutter={[40, 20]}>
+                        <Col span={4}>
+                            <div className="header__logo">
+                                <img src={logo} alt="Logo"/>
+                            </div>
+                        </Col>
+                        <Col span={8}>
+                            <div className="header__search">
+                                <Search
+                                    placeholder="Nhập từ khóa tìm kiếm"
+                                    enterButton="Tìm kiếm"
+                                    size="large"
+                                    allowClear
+                                    // suffix={<AudioOutlined/>}
+                                    onSearch={onSearch}
+                                />
+                            </div>
+                        </Col>
+                        <Col span={10}>
+                            <Menu className="header__menu"
+                                mode="horizontal"
+                                defaultSelectedKeys={[`/${selectedKey}`]}
+                                items={items}
+                                // style={{ flex: 1, minWidth: 0 }}
+                            />
+                        </Col>
+                        <Col span={2}>
+                            <div className="auth">
+                                <Dropdown menu={{ items: token ? login : unLogin }} placement="bottom">
+                                    <Button>{username ? username : <UserOutlined />}</Button>
+                                </Dropdown>
+                            </div>
+                        </Col>
+                    </Row>
                 </header>
                 <Content className="content">
                     <div
@@ -97,9 +110,6 @@ function LayoutDefault () {
                     <Outlet/>
                     </div>
                 </Content>
-                {/* <Footer className="footer">
-                    Copyright ©{new Date().getFullYear()} Created by Group 8
-                </Footer> */}
                 <Footer className="footer">
                     <div className="footer__main">
                         <div className="footer__box">
