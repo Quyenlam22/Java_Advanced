@@ -26,3 +26,8 @@ export const deleteAllItem = () => {
         type: "DELETE_ALL_ITEM",
     })
 }
+
+export const setCart = (items) => ({
+    type: "SET_CART",
+    items: items
+});

@@ -1,12 +1,15 @@
 import { useRoutes } from "react-router-dom";
-import { routes } from "../../routes";
+import { routesClient } from "../../routes/RoutesClient/index";
+import { routesAdmin } from "../../routes/RoutesAdmin/index";
 
 function AllRoutes () {
-    const elements = useRoutes(routes);
+    const elementsClient = useRoutes(routesClient);
+    const elementsAdmin = useRoutes(routesAdmin);
 
     return (
         <>
-            {elements}
+            {elementsClient}
+            {elementsAdmin}
         </>
     )
 }

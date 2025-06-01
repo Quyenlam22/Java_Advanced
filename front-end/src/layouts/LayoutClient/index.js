@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import Logout from '../../components/Logout';
 import CategoryMini from '../../components/Category/CategoryMini';
 import { addPost } from '../../services/cartService';
-import { checkUser } from '../../utils/checkUser';
+// import { checkUser } from '../../utils/checkUser';
 const { Search } = Input;
 
 const items = [

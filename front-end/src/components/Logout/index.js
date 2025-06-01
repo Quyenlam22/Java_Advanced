@@ -1,5 +1,4 @@
 import Cookies from 'js-cookie';
-import { useState } from 'react';
 import { notification } from 'antd';
 
 function Logout (props) {

@@ -253,14 +253,10 @@
       "userId": 3
     },
     {
-      "id": "e2ea",
+      "id": "d891",
       "bookItems": [
         {
           "bookId": "2",
-          "quantity": 2
-        },
-        {
-          "bookId": "1",
           "quantity": 1
         }
       ]

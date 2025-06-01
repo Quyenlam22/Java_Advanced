@@ -1,7 +1,4 @@
-import { Button, Carousel, Col, Row } from "antd";
-import cat1 from "../../images/cat-1.jpg";
-// import cat2 from "../../images/cat-2.jpg";
-// import cat3 from "../../images/cat-3.jpg";
+import { Carousel, Col, Row } from "antd";
 import "./TopCategory.scss";
 import { Link } from "react-router-dom";
 import { RightOutlined } from '@ant-design/icons';

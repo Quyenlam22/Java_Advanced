@@ -1,7 +1,5 @@
 import { Col, Row } from "antd";
 import "./TopBook.scss";
-import { Link } from "react-router-dom";
-import { RightOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import { getBook } from "../../services/bookService";
 import Paginate from "../Paginate";

@@ -1,12 +1,12 @@
-import LayoutDefault from "../layouts/LayoutClient";
-import Home from "../pages/client/Home";
-import Category from "../pages/client/Category";
-import Cart from "../pages/client/Cart";
-import AllCategory from "../components/TopCategory/AllCategory";
-import PrivateRoute from "../components/PrivateRoute";
-import Order from "../pages/client/Order";
+import LayoutDefault from "../../layouts/LayoutClient";
+import Home from "../../pages/client/Home";
+import Category from "../../pages/client/Category";
+import Cart from "../../pages/client/Cart";
+import AllCategory from "../../components/TopCategory/AllCategory";
+import PrivateRoute from "../../components/PrivateRoute";
+import Order from "../../pages/client/Order";
 
-export const routes = [
+export const routesClient = [
     {
         path: "/",
         element: <LayoutDefault/>,

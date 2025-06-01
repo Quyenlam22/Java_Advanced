@@ -3,8 +3,8 @@ import { useState } from "react";
 import { checkLogin } from "../../services/authService";
 // import { loginPost } from "../../services/authService";
 import Cookies from 'js-cookie';
-import { getCart, getCartByUser } from "../../services/cartService";
-import { checkUser } from "../../utils/checkUser";
+// import { getCart, getCartByUser } from "../../services/cartService";
+// import { checkUser } from "../../utils/checkUser";
 
 const rules = [{ 
     required: true, 

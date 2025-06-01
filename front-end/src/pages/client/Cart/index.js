@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import CartList from "../../../components/Cart/CartList";
 import "./Cart.scss";
-import {Link, Navigate, useLocation, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import { Button, ConfigProvider } from "antd";
 import { createStyles } from 'antd-style';
 import { useEffect, useState } from 'react';
@@ -130,7 +130,6 @@ function Cart() {
                                     if (token) {
                                         navigate("/orders")
                                     } else {
-                                        // <Navigate to={location.pathname}/>
                                         messageApi.open({
                                             type: 'error',
                                             content: 'Vui lòng đăng nhập để tiến hành thanh toán',
