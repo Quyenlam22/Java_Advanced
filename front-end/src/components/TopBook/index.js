@@ -28,9 +28,6 @@ function TopBook () {
                 <Col span={20}>
                     <h1>Sản phẩm nổi bật</h1>
                 </Col>
-                <Col span={4}>
-                    <Link to="/categories">Khám phá ngay <RightOutlined /></Link>
-                </Col>
             </Row>
             <Row gutter={[20, 20]}>
                 <BookItem pagination={pagination}/>

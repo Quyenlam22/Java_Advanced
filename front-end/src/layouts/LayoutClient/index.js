@@ -8,9 +8,11 @@ import { BankOutlined, ClockCircleOutlined, CreditCardOutlined, EnvironmentOutli
 import { Input } from 'antd';
 import CartMini from "../../components/Cart/CartMini";
 import Login from "../../components/Login";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Logout from '../../components/Logout';
 import CategoryMini from '../../components/Category/CategoryMini';
+import { addPost } from '../../services/cartService';
+import { checkUser } from '../../utils/checkUser';
 const { Search } = Input;
 
 const items = [
@@ -21,7 +23,7 @@ const items = [
     },
     {
         key: "/categories",
-        label: <CategoryMini/>
+        label: <NavLink to="/categories"><CategoryMini/></NavLink>
     },
     {
         key: "/cart",
@@ -36,6 +38,23 @@ function LayoutDefault () {
 
     const location = useLocation();
     const selectedKey = location.pathname.split('/')[1]; 
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+
+        const checkCart = async () => {
+            if(!Cookies.get("cart")) {
+                const options = {
+                    bookItems: []
+                };
+                const cart = await addPost(options);
+                Cookies.set("cart", cart.id, { expires: 365 });
+            }
+        }
+
+        checkCart();
+        // checkUser();
+    }, [location.pathname]);
 
     const login = [
         {
@@ -89,6 +108,7 @@ function LayoutDefault () {
                                 mode="horizontal"
                                 defaultSelectedKeys={[`/${selectedKey}`]}
                                 items={items}
+                                selectedKeys={[location.pathname]}
                                 // style={{ flex: 1, minWidth: 0 }}
                             />
                         </Col>

@@ -13,3 +13,16 @@ export const updateQuantity = (id, quantity = 1) => {
         quantity: quantity
     })
 }
+
+export const deleteItem = (id) => {
+    return ({
+        type: "DELETE_ITEM",
+        id: id,
+    })
+}
+
+export const deleteAllItem = () => {
+    return ({
+        type: "DELETE_ALL_ITEM",
+    })
+}

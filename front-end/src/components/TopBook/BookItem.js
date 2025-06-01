@@ -2,19 +2,41 @@ import { ShoppingCartOutlined } from '@ant-design/icons';
 import { Button, Col, Rate } from 'antd';
 import { Link } from 'react-router-dom';
 import cat1 from "../../images/cat-1.jpg";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addToCart, updateQuantity } from "../../actions/cart";
+import { getCart, updatePatch } from '../../services/cartService';
+import Cookies from 'js-cookie';
 
 function BookItem (props) {
     const { pagination } = props;
     const dispatch = useDispatch();
-    const cart = useSelector(state => state.cartReducer);
 
-    const handleClick = (item) => {
-        if(cart.some(itemCart => itemCart.id === item.id)) {
+    const cartId = Cookies.get("cart");
+
+    const handleClick = async (item) => {
+        const detailCart = await getCart(cartId);
+        const index = detailCart.bookItems.findIndex(itemCart => itemCart.bookId === item.id)
+        if(index >= 0) {
+            detailCart.bookItems[index].quantity += 1;
+            
+            const options = {
+                bookItems: detailCart.bookItems
+            };
+            await updatePatch(options, cartId);
             dispatch(updateQuantity(item.id));
         }
         else {
+            const options = {
+                bookItems: [
+                    ...detailCart.bookItems,
+                    {
+                        bookId: item.id,
+                        quantity: 1
+                    }
+                ]
+            };
+
+            await updatePatch(options, cartId);
             dispatch(addToCart(item));
         }
     }

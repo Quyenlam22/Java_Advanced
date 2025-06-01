@@ -1,31 +1,31 @@
 {
   "categories": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Science Fiction",
       "description": "Books that explore futuristic and scientific concepts.",
       "created_at": "2025-05-01T10:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Fantasy",
       "description": "Books filled with magical and mythical adventures.",
       "created_at": "2025-05-02T11:00:00Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Mystery",
       "description": "Books that involve solving crimes or uncovering secrets.",
       "created_at": "2025-05-03T09:30:00Z"
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "Romance",
       "description": "Books centered around love stories and emotional relationships.",
       "created_at": "2025-05-04T14:15:00Z"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "Historical Fiction",
       "description": "Books set in historical settings with fictional narratives.",
       "created_at": "2025-05-05T16:45:00Z"
@@ -33,7 +33,7 @@
   ],
   "authors": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Isaac Asimov",
       "bio": "Isaac Asimov was a prolific science fiction author and professor of biochemistry.",
       "profile_image": "asimov.jpg",
@@ -41,7 +41,7 @@
       "updated_at": "2025-05-01T12:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "J.K. Rowling",
       "bio": "British author best known for the Harry Potter series.",
       "profile_image": "rowling.jpg",
@@ -49,7 +49,7 @@
       "updated_at": "2025-05-02T13:00:00Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Frank Herbert",
       "bio": "American science fiction writer, best known for the novel Dune.",
       "profile_image": "herbert.jpg",
@@ -57,7 +57,7 @@
       "updated_at": "2025-05-05T10:30:00Z"
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "Agatha Christie",
       "bio": "Famous for her detective novels and short stories.",
       "profile_image": "christie.jpg",
@@ -65,7 +65,7 @@
       "updated_at": "2025-05-08T09:00:00Z"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "Jane Austen",
       "bio": "English novelist known primarily for her six major novels.",
       "profile_image": "austen.jpg",
@@ -75,7 +75,7 @@
   ],
   "books": [
     {
-      "id": 1,
+      "id": "1",
       "title": "Foundation",
       "description": "A complex saga of humans scattered on planets throughout the galaxy.",
       "price": 19.99,
@@ -88,7 +88,7 @@
       "updated_at": "2025-05-03T14:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Harry Potter and the Philosopher's Stone",
       "description": "A young wizard discovers his magical heritage.",
       "price": 14.99,
@@ -101,7 +101,7 @@
       "updated_at": "2025-05-04T15:00:00Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "Dune",
       "description": "Set on the desert planet Arrakis, Dune is the story of Paul Atreides.",
       "price": 22.5,
@@ -114,7 +114,7 @@
       "updated_at": "2025-05-05T16:00:00Z"
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "I, Robot",
       "description": "A collection of short stories about the interaction of humans, robots, and morality.",
       "price": 17.5,
@@ -127,7 +127,7 @@
       "updated_at": "2025-05-06T10:00:00Z"
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "Harry Potter and the Chamber of Secrets",
       "description": "Harry returns to Hogwarts and discovers a dark secret beneath the school.",
       "price": 16.99,
@@ -140,7 +140,7 @@
       "updated_at": "2025-05-06T11:00:00Z"
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "Children of Dune",
       "description": "The epic saga continues as Paul Atreides' children confront political chaos.",
       "price": 20.99,
@@ -153,7 +153,7 @@
       "updated_at": "2025-05-06T12:00:00Z"
     },
     {
-      "id": 7,
+      "id": "7",
       "title": "Harry Potter and the Prisoner of Azkaban",
       "description": "Harry learns the truth about Sirius Black, his parents, and betrayal.",
       "price": 18.99,
@@ -166,7 +166,7 @@
       "updated_at": "2025-05-06T13:00:00Z"
     },
     {
-      "id": 8,
+      "id": "8",
       "title": "Murder on the Orient Express",
       "description": "Detective Hercule Poirot investigates a murder on a snowbound train.",
       "price": 15.99,
@@ -179,7 +179,7 @@
       "updated_at": "2025-05-08T14:00:00Z"
     },
     {
-      "id": 9,
+      "id": "9",
       "title": "Pride and Prejudice",
       "description": "A romantic novel about manners and matrimonial machinations.",
       "price": 13.99,
@@ -192,7 +192,7 @@
       "updated_at": "2025-05-08T15:00:00Z"
     },
     {
-      "id": 10,
+      "id": "10",
       "title": "The Book Thief",
       "description": "A historical novel about a young girl's life in Nazi Germany.",
       "price": 17.99,
@@ -207,7 +207,7 @@
   ],
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "username": "admin123",
       "email": "admin@example.com",
       "password": "$2b$10$hashedpasswordadmin",
@@ -220,7 +220,7 @@
       "token": "b7f92e1a84e14f98bb9cbce4a7131a40"
     },
     {
-      "id": 2,
+      "id": "2",
       "username": "user001",
       "email": "user001@example.com",
       "password": "$2b$10$hashedpassworduser001",
@@ -233,7 +233,7 @@
       "token": "d8a45c7f22ad420198edcfb4d7a58b5f"
     },
     {
-      "id": 3,
+      "id": "3",
       "username": "john_doe",
       "email": "john.doe@example.com",
       "password": "$2b$10$hashedpasswordjohn",
@@ -244,6 +244,26 @@
       "created_at": "2025-02-20T14:30:00Z",
       "updated_at": "2025-03-01T11:45:00Z",
       "token": "9cae5f6bd4a64eb6ae5a77fd9a4e5d92"
+    }
+  ],
+  "carts": [
+    {
+      "id": "808a",
+      "bookItems": [],
+      "userId": 3
+    },
+    {
+      "id": "e2ea",
+      "bookItems": [
+        {
+          "bookId": "2",
+          "quantity": 2
+        },
+        {
+          "bookId": "1",
+          "quantity": 1
+        }
+      ]
     }
   ]
 }

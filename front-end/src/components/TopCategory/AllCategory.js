@@ -4,6 +4,7 @@ import CategoryItem from "./CategoryItem";
 import { Col, Row } from "antd";
 import { paginate } from "../../utils/paginate";
 import Paginate from "../Paginate";
+import { Outlet } from "react-router-dom";
 
 function AllCategory () {
     const [data, setData] = useState([]);
@@ -22,6 +23,8 @@ function AllCategory () {
 
     return (
         <>
+            <Outlet/>
+            <h2>Khám phá thể loại</h2>
             <Row gutter={[30, 30]}>
                 {pagination.currentItems && (
                     pagination.currentItems.map(item => (

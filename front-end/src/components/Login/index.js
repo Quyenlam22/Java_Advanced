@@ -3,6 +3,8 @@ import { useState } from "react";
 import { checkLogin } from "../../services/authService";
 // import { loginPost } from "../../services/authService";
 import Cookies from 'js-cookie';
+import { getCart, getCartByUser } from "../../services/cartService";
+import { checkUser } from "../../utils/checkUser";
 
 const rules = [{ 
     required: true, 
@@ -47,6 +49,15 @@ function Login (props) {
         if(result.length > 0){
             setUsername(result[0].full_name);
             setIsModalOpen(false);
+
+            // const cart = await getCartByUser(result[0].id);
+            // console.log(cart)
+            // if(cart) {
+            //     Cookies.set("cart", cart.id);
+            // }
+            // else {
+            //     checkUser();
+            // }
             Cookies.set('token', result[0].token, { expires: 7 })
             Cookies.set('full_name', result[0].full_name, { expires: 7 })
             openNotification(result[0].full_name);
