@@ -1,7 +1,9 @@
+import UserManagement from "../../../components/UserManagement";
+
 function UserClient () {
     return (
         <>
-            UserClient
+        <UserManagement role={'CUSTOMER'}/>
         </>
     )
 }

@@ -1,21 +1,29 @@
 import { useEffect, useState } from 'react';
 import { Button, Divider, Radio, Table } from 'antd';
 import { Link } from 'react-router-dom';
-import { getAuthors } from '../../../services/authorService';
+import { getUserByRole } from '../../services/userService';
 
 const columns = [
   {
-    title: 'Tên',
-    dataIndex: 'name',
-    render: text => <a>{text}</a>,
+    title: 'Username',
+    dataIndex: 'username',
+    // render: text => <a>{text}</a>,
   },
   {
-    title: 'Bio',
-    dataIndex: 'bio',
+    title: 'Email',
+    dataIndex: 'email',
   },
   {
-    title: "Ảnh",
-    dataIndex: "profile_image"
+    title: "Họ và tên",
+    dataIndex: "full_name"
+  },
+  {
+    title: "Địa chỉ",
+    dataIndex: "address"
+  },
+  {
+    title: "Số điện thoại",
+    dataIndex: "phone"
   },
   {
     title: 'Thời gian tạo',
@@ -24,7 +32,7 @@ const columns = [
   {
     title: 'Hành động',
     width: 160,
-    dataIndex: 'actions',
+    dataIndex: 'actions'
   },
 ];
 
@@ -34,13 +42,15 @@ const rowSelection = {
   },
 };
 
-function AuthorAdmin () {
+function UserManagement (props) {
+    const { role } = props;
+    console.log(role)
     const [selectionType, setSelectionType] = useState('checkbox');
     const [record, setRecord] = useState([]);
 
     useEffect(() => {
         const fetchApi = async () => {
-            const result = await getAuthors();
+            const result = await getUserByRole(role);
             setRecord(result);
         }
         fetchApi();
@@ -51,9 +61,12 @@ function AuthorAdmin () {
 
         return {
             key: item.id,
-            name: item.name,
-            bio: item.bio,
-            profile_image: item.profile_image,
+            username: item.username,
+            email: item.email,
+            password: item.password,
+            full_name: item.full_name,
+            address: item.address,
+            phone: item.phone,
             created_at: date,
             actions: (
               <>
@@ -66,7 +79,7 @@ function AuthorAdmin () {
 
     return (
         <>
-            <h1>Danh mục</h1>
+            <h1>Danh sách người dùng</h1>
             <Radio.Group onChange={e => setSelectionType(e.target.value)} value={selectionType}>
                 <Radio value="checkbox">Checkbox</Radio>
                 <Radio value="radio">radio</Radio>
@@ -82,4 +95,4 @@ function AuthorAdmin () {
     )
 }
 
-export default AuthorAdmin;
+export default UserManagement;

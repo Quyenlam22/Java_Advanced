@@ -1,9 +1,12 @@
 import { Menu } from "antd";
 import { BookOutlined, DashboardOutlined, OrderedListOutlined, SettingOutlined } from '@ant-design/icons';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FaUser, FaUsers, FaUsersCog, FaUserSecret } from "react-icons/fa";
 
 function MenuSider () {
+    const location = useLocation();
+    const path = location.pathname;
+    
     const items = [
         {
             key: '/admin/dashboard',
@@ -53,7 +56,7 @@ function MenuSider () {
         <>
             <Menu
                 // defaultOpenKeys={["/admin/dashboard"]}
-                defaultSelectedKeys={["/admin/dashboard"]}
+                defaultSelectedKeys={[path]}
                 mode="inline"
                 items={items}
             />

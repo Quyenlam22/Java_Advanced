@@ -1,9 +1,11 @@
-function UserAdmin () {
-    return (
-        <>
-            UserAdmin
-        </>
-    )
+import UserManagement from "../../../components/UserManagement";
+
+function AuthorAdmin () {
+  return (
+    <>
+      <UserManagement role={'ADMIN'}/>
+    </>
+  )
 }
 
-export default UserAdmin;
+export default AuthorAdmin;
