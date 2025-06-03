@@ -14,7 +14,7 @@ const rules = [{
 function Login (props) {
     const {setUsername} = props;
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [form] = Form.useForm();
+    const [form] = Form.useForm();
     const [api, contextHolder] = notification.useNotification();
 
     const openNotification = (name) => {
@@ -35,12 +35,11 @@ function Login (props) {
     };
     
     const showModal = () => {
-        // form.resetFields();
         setIsModalOpen(true);
     };
     const onCancel = () => {
         setIsModalOpen(false);
-        // form.resetFields();
+        form.resetFields();
     }
 
     const onFinish = async (values) => {
@@ -88,6 +87,8 @@ function Login (props) {
                     onFinishFailed={onFinishFailed}
                     labelCol={{ span: 8 }}
                     wrapperCol={{ span: 16 }}
+                    form={form}
+                    labelAlign="left"
                 >
                     <Form.Item
                         label="Tên tài khoản"

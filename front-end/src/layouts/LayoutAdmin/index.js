@@ -1,4 +1,4 @@
-import { Layout } from "antd";
+import { Button, Dropdown, Layout } from "antd";
 import { Content } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import './LayoutAdmin.scss';
@@ -7,10 +7,39 @@ import { MenuFoldOutlined, MenuUnfoldOutlined, SearchOutlined, UserOutlined } fr
 import { useState } from "react";
 import Notice from "../../components/Notice";
 import MenuSider from "../../components/MenuSider";
-import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
+import Cookies from 'js-cookie';
+import Logout from "../../components/Logout";
+import Login from "../../components/Login";
 
 function LayoutAdmin () {
     const [collapse, setCollapse] = useState(false);
+
+    const token = Cookies.get('token');
+    const fullName = Cookies.get('full_name') || "";
+    const [username, setUsername] = useState(fullName);
+
+    const login = [
+        {
+            key: "userinfo",
+            label: <NavLink to="user-info">Thông tin tài khoản</NavLink>
+        },
+        {
+            key: "logout",
+            label: <Logout setUsername={setUsername}/>
+        }
+    ]
+
+    const unLogin = [
+        {
+            key: "login",
+            label: <Login setUsername={setUsername}/>
+        },
+        {
+            key: "register",
+            label: 'Đăng ký'
+        }
+    ]
 
     return (
         <>
@@ -37,8 +66,10 @@ function LayoutAdmin () {
                             {/* <div className="header-admin__nav-right__avatar">
                                 <img src={avatar} alt="Avatar"/>
                             </div> */}
-                            <div className="header-admin__nav-right__config">
-                                <UserOutlined />
+                            <div className="header-admin__nav-right__auth">
+                                <Dropdown menu={{ items: token ? login : unLogin }} placement="bottom">
+                                    <Button>{username ? username : <UserOutlined />}</Button>
+                                </Dropdown>
                             </div>
                         </div>
                     </div>

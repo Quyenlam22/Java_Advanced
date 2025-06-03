@@ -1,4 +1,4 @@
-import { get } from "../utils/request"
+import { del, get } from "../utils/request"
 
 export const getCategories = async () => {
     const result = await get("categories");
@@ -7,5 +7,10 @@ export const getCategories = async () => {
 
 export const getDetailCategory = async (id) => {
     const result = await get(`categories?id=${id}`);
+    return result;
+}
+
+export const delCategory = async (id) => {
+    const result = await del(`categories/${id}`);
     return result;
 }

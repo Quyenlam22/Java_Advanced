@@ -1,4 +1,4 @@
-import { get } from "../utils/request";
+import { del, get } from "../utils/request";
 
 export const getBook = async () => {
     const result = await get("books");
@@ -12,5 +12,10 @@ export const getBookById = async (id) => {
 
 export const getBooksByCategory = async (id) => {
     const result = await get(`books?category_id=${id}`);
+    return result;
+}
+
+export const delBook = async (id) => {
+    const result = await del(`books/${id}`);
     return result;
 }

@@ -34,11 +34,9 @@
   "authors": [
     {
       "id": "1",
-      "name": "Isaac Asimov",
-      "bio": "Isaac Asimov was a prolific science fiction author and professor of biochemistry.",
-      "profile_image": "asimov.jpg",
-      "created_at": "2025-05-01T12:00:00Z",
-      "updated_at": "2025-05-01T12:00:00Z"
+      "name": "Nguyễn Văn A",
+      "bio": "Tác giả chuyên viết về công nghệ và phần mềm.",
+      "created_at": "2023-05-10"
     },
     {
       "id": "2",
@@ -66,11 +64,9 @@
     },
     {
       "id": "5",
-      "name": "Jane Austen",
-      "bio": "English novelist known primarily for her six major novels.",
-      "profile_image": "austen.jpg",
-      "created_at": "2025-05-08T10:00:00Z",
-      "updated_at": "2025-05-08T10:00:00Z"
+      "name": "Trần Thị B",
+      "bio": "Chuyên gia về AI, dữ liệu lớn và các hệ thống thông minh.",
+      "created_at": "2024-11-02"
     }
   ],
   "books": [
@@ -208,16 +204,16 @@
   "users": [
     {
       "id": "1",
-      "username": "admin123",
-      "email": "admin@example.com",
-      "password": "$2b$10$hashedpasswordadmin",
+      "username": "admin",
+      "email": "admin001@example.com",
+      "password": "$2b$10$hashedpassworduser001",
       "role": "ADMIN",
-      "full_name": "Nguyễn Văn A",
-      "address": "123 Đường Lê Lợi, Quận 1, TP.HCM",
-      "phone": "0901234567",
-      "created_at": "2024-12-01T08:00:00Z",
-      "updated_at": "2025-01-10T12:00:00Z",
-      "token": "b7f92e1a84e14f98bb9cbce4a7131a40"
+      "full_name": "Trần Thị B",
+      "address": "456 Đường Nguyễn Trãi, Hà Nội",
+      "phone": "0912345678",
+      "created_at": "2025-01-05T09:15:00Z",
+      "updated_at": "2025-01-05T09:15:00Z",
+      "token": "d8a45c7f22ad420198edcfb4d7a58b5f"
     },
     {
       "id": "2",
@@ -248,16 +244,11 @@
   ],
   "carts": [
     {
-      "id": "808a",
-      "bookItems": [],
-      "userId": 3
-    },
-    {
-      "id": "d891",
+      "id": "85c2",
       "bookItems": [
         {
           "bookId": "2",
-          "quantity": 1
+          "quantity": 2
         }
       ]
     }

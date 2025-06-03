@@ -1,4 +1,4 @@
-import { get } from "../utils/request"
+import { del, get } from "../utils/request"
 
 export const getAuthors = async () => {
     const result = await get("authors");
@@ -7,5 +7,10 @@ export const getAuthors = async () => {
 
 export const getDetailAuthor = async (id) => {
     const result = await get(`authors?id=${id}`);
+    return result;
+}
+
+export const delAuthor = async (id) => {
+    const result = await del(`authors/${id}`);
     return result;
 }
