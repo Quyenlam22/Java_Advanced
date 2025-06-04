@@ -1,13 +1,10 @@
 package com.group_6.book_store.dto;
 
-import lombok.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class AuthorDTO {
     private Long id;
     private String name;

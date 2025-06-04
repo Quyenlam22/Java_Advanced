@@ -1,16 +1,13 @@
 package com.group_6.book_store.dto;
 
-import lombok.*;
+import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Getter
-@Setter
-
 public class CategoryDTO {
     private Long id;
     private String name;
     private String description;
+    private LocalDateTime createdAt;
 }

@@ -9,36 +9,54 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.group_6.book_store.dto.AuthorDTO;
+import com.group_6.book_store.form.AuthorCreateForm;
+import com.group_6.book_store.form.AuthorUpdateForm;
+import com.group_6.book_store.service.AuthorService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/authors")
 public class AuthorController {
-    @Autowired
-    private AuthorService authorService;
 
-    @PostMapping
-    public ResponseEntity<AuthorDTO> createAuthor(@Valid @RequestBody AuthorCreateForm form) {
-        AuthorDTO authorDTO = authorService.createAuthor(form);
-        return ResponseEntity.ok(authorDTO);
+    private final AuthorService authorService;
+
+    public AuthorController(AuthorService authorService) {
+        this.authorService = authorService;
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AuthorDTO> updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorUpdateForm form) {
-        AuthorDTO authorDTO = authorService.updateAuthor(id, form);
-        return ResponseEntity.ok(authorDTO);
+    @GetMapping
+    public ResponseEntity<Page<AuthorDTO>> getAllAuthors(Pageable pageable) {
+        Page<AuthorDTO> authors = authorService.getAllAuthors(pageable);
+        return ResponseEntity.ok(authors);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<AuthorDTO>> searchAuthors(@RequestParam String searchTerm, Pageable pageable) {
+        Page<AuthorDTO> authors = authorService.searchAuthors(searchTerm, pageable);
+        return ResponseEntity.ok(authors);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AuthorDTO> getAuthor(@PathVariable Long id) {
-        AuthorDTO authorDTO = authorService.getAuthor(id);
-        return ResponseEntity.ok(authorDTO);
+        AuthorDTO author = authorService.getAuthor(id);
+        return ResponseEntity.ok(author);
     }
 
-    @GetMapping
-    public ResponseEntity<List<AuthorDTO>> getAllAuthors() {
-        List<AuthorDTO> authors = authorService.getAllAuthors();
-        return ResponseEntity.ok(authors);
+    @PostMapping
+    public ResponseEntity<AuthorDTO> createAuthor(@Valid @RequestBody AuthorCreateForm form) {
+        AuthorDTO author = authorService.createAuthor(form);
+        return ResponseEntity.ok(author);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AuthorDTO> updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorUpdateForm form) {
+        AuthorDTO author = authorService.updateAuthor(id, form);
+        return ResponseEntity.ok(author);
     }
 
     @DeleteMapping("/{id}")

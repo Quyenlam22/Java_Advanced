@@ -5,45 +5,54 @@ import com.group_6.book_store.form.AuthorPostCreateForm;
 import com.group_6.book_store.form.AuthorPostUpdateForm;
 import com.group_6.book_store.service.AuthorPostService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/author-posts")
 public class AuthorPostController {
-    @Autowired
-    private AuthorPostService authorPostService;
 
-    @PostMapping
-    public ResponseEntity<AuthorPostDTO> createAuthorPost(@Valid @RequestBody AuthorPostCreateForm form) {
-        AuthorPostDTO authorPostDTO = authorPostService.createAuthorPost(form);
-        return ResponseEntity.ok(authorPostDTO);
-    }
+    private final AuthorPostService authorPostService;
 
-    @PutMapping("/{id}")
-    public ResponseEntity<AuthorPostDTO> updateAuthorPost(@PathVariable Long id, @Valid @RequestBody AuthorPostUpdateForm form) {
-        AuthorPostDTO authorPostDTO = authorPostService.updateAuthorPost(id, form);
-        return ResponseEntity.ok(authorPostDTO);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<AuthorPostDTO> getAuthorPost(@PathVariable Long id) {
-        AuthorPostDTO authorPostDTO = authorPostService.getAuthorPost(id);
-        return ResponseEntity.ok(authorPostDTO);
+    public AuthorPostController(AuthorPostService authorPostService) {
+        this.authorPostService = authorPostService;
     }
 
     @GetMapping
-    public ResponseEntity<List<AuthorPostDTO>> getAllAuthorPosts() {
-        List<AuthorPostDTO> authorPosts = authorPostService.getAllAuthorPosts();
-        return ResponseEntity.ok(authorPosts);
+    public ResponseEntity<Page<AuthorPostDTO>> getAllPosts(Pageable pageable) {
+        Page<AuthorPostDTO> posts = authorPostService.getAllPosts(pageable);
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<AuthorPostDTO>> searchPosts(@RequestParam String searchTerm, Pageable pageable) {
+        Page<AuthorPostDTO> posts = authorPostService.searchPosts(searchTerm, pageable);
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AuthorPostDTO> getPost(@PathVariable Long id) {
+        AuthorPostDTO post = authorPostService.getPost(id);
+        return ResponseEntity.ok(post);
+    }
+
+    @PostMapping
+    public ResponseEntity<AuthorPostDTO> createPost(@Valid @RequestBody AuthorPostCreateForm form) {
+        AuthorPostDTO post = authorPostService.createPost(form);
+        return ResponseEntity.ok(post);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AuthorPostDTO> updatePost(@PathVariable Long id, @Valid @RequestBody AuthorPostUpdateForm form) {
+        AuthorPostDTO post = authorPostService.updatePost(id, form);
+        return ResponseEntity.ok(post);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAuthorPost(@PathVariable Long id) {
-        authorPostService.deleteAuthorPost(id);
+    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
+        authorPostService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
 }

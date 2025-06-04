@@ -1,20 +1,17 @@
 package com.group_6.book_store.form;
 
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class AuthorCreateForm {
-    @NotBlank(message = "Tên tác giả không được để trống")
-    @Size(max = 100, message = "Tên tác giả không được vượt quá 100 ký tự")
+    @NotBlank(message = "Name is required")
+    @Size(max = 100, message = "Name must not exceed 100 characters")
     private String name;
 
-    @Size(max = 1000, message = "Tiểu sử không được vượt quá 1000 ký tự")
     private String bio;
 
-    @Size(max = 255, message = "URL ảnh không được vượt quá 255 ký tự")
+    @Size(max = 255, message = "Profile image URL must not exceed 255 characters")
     private String profileImage;
 }

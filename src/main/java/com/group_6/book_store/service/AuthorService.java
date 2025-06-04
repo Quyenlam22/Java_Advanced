@@ -6,19 +6,36 @@ import com.group_6.book_store.form.AuthorCreateForm;
 import com.group_6.book_store.form.AuthorUpdateForm;
 import com.group_6.book_store.mapper.AuthorMapper;
 import com.group_6.book_store.repository.AuthorRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthorService {
-    @Autowired
-    private AuthorRepository authorRepository;
 
-    @Autowired
-    private AuthorMapper authorMapper;
+    private final AuthorRepository authorRepository;
+    private final AuthorMapper authorMapper;
+
+    public AuthorService(AuthorRepository authorRepository, AuthorMapper authorMapper) {
+        this.authorRepository = authorRepository;
+        this.authorMapper = authorMapper;
+    }
+
+    public Page<AuthorDTO> getAllAuthors(Pageable pageable) {
+        return authorRepository.findAll(pageable)
+                .map(authorMapper::toDTO);
+    }
+
+    public Page<AuthorDTO> searchAuthors(String searchTerm, Pageable pageable) {
+        return authorRepository.findByNameContainingIgnoreCase(searchTerm, pageable)
+                .map(authorMapper::toDTO);
+    }
+
+    public AuthorDTO getAuthor(Long id) {
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+        return authorMapper.toDTO(author);
+    }
 
     public AuthorDTO createAuthor(AuthorCreateForm form) {
         Author author = authorMapper.toEntity(form);
@@ -28,22 +45,10 @@ public class AuthorService {
 
     public AuthorDTO updateAuthor(Long id, AuthorUpdateForm form) {
         Author author = authorRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
         authorMapper.updateEntityFromForm(form, author);
         author = authorRepository.save(author);
         return authorMapper.toDTO(author);
-    }
-
-    public AuthorDTO getAuthor(Long id) {
-        Author author = authorRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
-        return authorMapper.toDTO(author);
-    }
-
-    public List<AuthorDTO> getAllAuthors() {
-        return authorRepository.findAll().stream()
-            .map(authorMapper::toDTO)
-            .collect(Collectors.toList());
     }
 
     public void deleteAuthor(Long id) {
