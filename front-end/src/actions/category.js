@@ -5,6 +5,13 @@ export const setCategory = (items) => {
     })
 }
 
+export const editCategory = (options) => {
+    return ({
+        type: "EDIT_CATEGORY",
+        options: options,
+    })
+}
+
 export const deleteCategory = (id) => {
     return ({
         type: "DELETE_CATEGORY",

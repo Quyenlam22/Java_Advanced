@@ -5,6 +5,13 @@ export const setAuthor = (items) => {
     })
 }
 
+export const editAuthor = (options) => {
+    return ({
+        type: "EDIT_AUTHOR",
+        options: options,
+    })
+}
+
 export const deleteAuthor = (id) => {
     return ({
         type: "DELETE_AUTHOR",

@@ -5,6 +5,13 @@ export const setBook = (items) => {
     })
 }
 
+export const editBook = (options) => {
+    return ({
+        type: "EDIT_BOOK",
+        options: options,
+    })
+}
+
 export const deleteBook = (id) => {
     return ({
         type: "DELETE_BOOK",

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Divider, Popconfirm, Radio, Table } from 'antd';
-import { Link } from 'react-router-dom';
 import { delAuthor, getAuthors } from '../../../services/authorService';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAuthor, setAuthor } from '../../../actions/author';
+import UpdateAuthor from '../../../components/Author/UpdateAuthor';
 
 const columns = [
   {
@@ -27,6 +27,7 @@ const columns = [
     title: 'Hành động',
     width: 160,
     dataIndex: 'actions',
+    fixed: 'right'
   },
 ];
 
@@ -40,6 +41,8 @@ function AuthorAdmin () {
   const [selectionType, setSelectionType] = useState('checkbox');
   const author = useSelector(state => state.authorReducer);
   const dispatch = useDispatch();
+
+  // const [selectedRecord, setSelectedRecord] = useState(null);
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -65,7 +68,7 @@ function AuthorAdmin () {
       created_at: date,
       actions: (
         <>
-          <Link to={`edit/${item.id}`} className='mr-1'><Button type='primary'>Sửa</Button></Link>
+          <UpdateAuthor item={item}/>
           <Popconfirm
             title="Xóa tác giả"
             description="Bạn có chắc xóa tác giả này?"
@@ -93,6 +96,7 @@ function AuthorAdmin () {
           columns={columns}
           dataSource={data}
           pagination={{pageSize: 5}}
+          scroll={{x: 'max-content'}}
       />
     </>
   )

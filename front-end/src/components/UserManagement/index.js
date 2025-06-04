@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Divider, Popconfirm, Radio, Table } from 'antd';
-import { Link } from 'react-router-dom';
 import { delUser, getUserByRole } from '../../services/userService';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser, setUser } from '../../actions/user';
+import UpdateUser from './UpdateUser';
 
 const columns = [
   {
@@ -27,6 +27,10 @@ const columns = [
   {
     title: "Số điện thoại",
     dataIndex: "phone"
+  },
+  {
+    title: "Vai trò",
+    dataIndex: "role"
   },
   {
     title: 'Thời gian tạo',
@@ -76,10 +80,11 @@ function UserManagement (props) {
       full_name: item.full_name,
       address: item.address,
       phone: item.phone,
+      role: item.role,
       created_at: date,
       actions: (
         <>
-          <Link to={`edit/${item.id}`} className='mr-1'><Button type='primary'>Sửa</Button></Link>
+          <UpdateUser item={item}/>
           <Popconfirm
               title="Xóa người dùng"
               description="Bạn có chắc xóa người dùng này?"

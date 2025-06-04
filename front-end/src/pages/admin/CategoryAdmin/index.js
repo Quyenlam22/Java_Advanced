@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Divider, Popconfirm, Radio, Table } from 'antd';
 import { delCategory, getCategories } from '../../../services/categoryService';
-import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCategory, setCategory } from '../../../actions/category';
+import UpdateCategory from '../../../components/Category/UpdateCategory';
 
 const columns = [
   {
@@ -22,7 +22,8 @@ const columns = [
   {
     title: 'Hành động',
     width: 160,
-    dataIndex: 'actions'
+    dataIndex: 'actions',
+    fixed: 'right'
   },
 ];
 
@@ -60,7 +61,7 @@ function CategoryAdmin () {
       created_at: date,
       actions: (
         <>
-          <Link to={`edit/${item.id}`} className='mr-1'><Button type='primary'>Sửa</Button></Link>
+          <UpdateCategory item={item}/>
           <Popconfirm
             title="Xóa danh mục"
             description="Bạn có chắc xóa danh mục này?"
@@ -88,6 +89,7 @@ function CategoryAdmin () {
         columns={columns}
         dataSource={data}
         pagination={{pageSize: 5}}
+          scroll={{x: 'max-content'}}
       />
     </>
   )

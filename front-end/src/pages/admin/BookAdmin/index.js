@@ -3,9 +3,9 @@ import { Button, Divider, Popconfirm, Radio, Table } from 'antd';
 import { delBook, getBook } from '../../../services/bookService';
 import { getDetailCategory } from '../../../services/categoryService';
 import { getDetailAuthor } from '../../../services/authorService';
-import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteBook, setBook } from '../../../actions/book';
+import UpdateBook from '../../../components/TopBook/UpdateBook';
 
 const columns = [
   {
@@ -80,9 +80,10 @@ function BookAdmin () {
 
         item.category = category[0] || {name: "Không có"};
         item.author = author[0] || {name: "Không có"};
-
+        
         return {
             key: item.id,
+            id: item.id,
             thumbnail: item.thumbnail,
             title: item.title,
             description: item.description,
@@ -94,7 +95,7 @@ function BookAdmin () {
             created_at: date,
             actions: (
               <>
-                <Link to={`edit/${item.id}`} className='mr-1'><Button type='primary'>Sửa</Button></Link>
+                <UpdateBook item={item}/>
                 <Popconfirm
                   title="Xóa sách"
                   description="Bạn có chắc xóa sách này?"
@@ -114,12 +115,9 @@ function BookAdmin () {
     fetchApi();
   }, [])
 
-  console.log(book);
-  
-
   return (
       <>
-        <h1>Danh mục</h1>
+        <h1>Sách</h1>
         <Radio.Group onChange={e => setSelectionType(e.target.value)} value={selectionType}>
             <Radio value="checkbox">Checkbox</Radio>
             <Radio value="radio">radio</Radio>

@@ -1,4 +1,4 @@
-import { del, get } from "../utils/request";
+import { del, get, patch } from "../utils/request";
 
 export const getUser = async (token) => {
     const result = await get(`users?token=${token}`);
@@ -12,5 +12,10 @@ export const getUserByRole = async (role) => {
 
 export const delUser = async (id) => {
     const result = await del(`users/${id}`);
+    return result;
+}
+
+export const updateUser = async (options, id) => {
+    const result = await patch(options, `users/${id}`);
     return result;
 }
