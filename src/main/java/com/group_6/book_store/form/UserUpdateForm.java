@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class UserUpdateForm {
     @Size(max = 100)
+    private  String username;
+    @Size(max = 100)
     private String fullName;
 
     private String address;

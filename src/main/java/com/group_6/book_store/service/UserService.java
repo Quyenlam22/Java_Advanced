@@ -71,6 +71,13 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Not authorized to update this user");
         }
 
+        // Kiểm tra nếu username được gửi và không trùng với username hiện tại
+        if (form.getUsername() != null && !form.getUsername().equals(user.getUsername())) {
+            if (userRepository.findByUsername(form.getUsername()).isPresent()) {
+                throw new RuntimeException("Username already exists");
+            }
+        }
+
         // Chỉ cập nhật các trường được gửi trong form, các trường khác giữ nguyên
         // Nhờ nullValuePropertyMappingStrategy = IGNORE trong UserMapper
         userMapper.updateEntityFromForm(form, user);
