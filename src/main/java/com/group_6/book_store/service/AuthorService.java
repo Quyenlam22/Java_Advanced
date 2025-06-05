@@ -46,6 +46,8 @@ public class AuthorService {
     public AuthorDTO updateAuthor(Long id, AuthorUpdateForm form) {
         Author author = authorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Author not found with id: " + id));
+        // Chỉ cập nhật các trường có giá trị trong form, các trường null sẽ giữ nguyên giá trị hiện tại
+        // Nhờ nullValuePropertyMappingStrategy = IGNORE trong AuthorMapper
         authorMapper.updateEntityFromForm(form, author);
         author = authorRepository.save(author);
         return authorMapper.toDTO(author);

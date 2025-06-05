@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CategoryService {
@@ -39,6 +40,7 @@ public class CategoryService {
         return categoryMapper.toDTO(category);
     }
 
+    @Transactional
     public CategoryDTO createCategory(CategoryCreateForm form) {
         // Kiểm tra quyền: Chỉ ADMIN
         if (!hasRole("ADMIN")) {
@@ -50,6 +52,7 @@ public class CategoryService {
         return categoryMapper.toDTO(category);
     }
 
+    @Transactional
     public CategoryDTO updateCategory(Long id, CategoryUpdateForm form) {
         // Kiểm tra quyền: Chỉ ADMIN
         if (!hasRole("ADMIN")) {
@@ -58,11 +61,15 @@ public class CategoryService {
 
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+
+        // Chỉ cập nhật các trường được gửi trong form, các trường khác giữ nguyên
+        // Nhờ nullValuePropertyMappingStrategy = IGNORE trong CategoryMapper
         categoryMapper.updateEntityFromForm(form, category);
         category = categoryRepository.save(category);
         return categoryMapper.toDTO(category);
     }
 
+    @Transactional
     public void deleteCategory(Long id) {
         // Kiểm tra quyền: Chỉ ADMIN
         if (!hasRole("ADMIN")) {

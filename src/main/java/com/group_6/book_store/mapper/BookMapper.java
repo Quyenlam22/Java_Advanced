@@ -16,5 +16,6 @@ public interface BookMapper {
 
     Book toEntity(BookCreateForm form);
 
+    // Chỉ cập nhật các trường được gửi trong form, các trường khác giữ nguyên
     void updateEntityFromForm(BookUpdateForm form, @MappingTarget Book book);
 }

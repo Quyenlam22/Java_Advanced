@@ -5,15 +5,6 @@ import com.group_6.book_store.form.AuthorCreateForm;
 import com.group_6.book_store.form.AuthorUpdateForm;
 import com.group_6.book_store.service.AuthorService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import com.group_6.book_store.dto.AuthorDTO;
-import com.group_6.book_store.form.AuthorCreateForm;
-import com.group_6.book_store.form.AuthorUpdateForm;
-import com.group_6.book_store.service.AuthorService;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +44,7 @@ public class AuthorController {
         return ResponseEntity.ok(author);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<AuthorDTO> updateAuthor(@PathVariable Long id, @Valid @RequestBody AuthorUpdateForm form) {
         AuthorDTO author = authorService.updateAuthor(id, form);
         return ResponseEntity.ok(author);

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -58,6 +59,7 @@ public class UserService implements UserDetailsService {
                 .map(userMapper::toDTO);
     }
 
+    @Transactional
     public UserDTO updateUser(Long id, UserUpdateForm form) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
@@ -69,11 +71,14 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Not authorized to update this user");
         }
 
+        // Chỉ cập nhật các trường được gửi trong form, các trường khác giữ nguyên
+        // Nhờ nullValuePropertyMappingStrategy = IGNORE trong UserMapper
         userMapper.updateEntityFromForm(form, user);
         user = userRepository.save(user);
         return userMapper.toDTO(user);
     }
 
+    @Transactional
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));

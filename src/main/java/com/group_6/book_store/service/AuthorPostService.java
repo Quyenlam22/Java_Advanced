@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthorPostService {
@@ -38,13 +39,13 @@ public class AuthorPostService {
                 .map(authorPostMapper::toDTO);
     }
 
-
     public AuthorPostDTO getPost(Long id) {
         AuthorPost post = authorPostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + id));
         return authorPostMapper.toDTO(post);
     }
 
+    @Transactional
     public AuthorPostDTO createPost(AuthorPostCreateForm form) {
         Author author = authorRepository.findById(form.getAuthorId())
                 .orElseThrow(() -> new RuntimeException("Author not found with id: " + form.getAuthorId()));
@@ -61,6 +62,7 @@ public class AuthorPostService {
         return authorPostMapper.toDTO(post);
     }
 
+    @Transactional
     public AuthorPostDTO updatePost(Long id, AuthorPostUpdateForm form) {
         AuthorPost post = authorPostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + id));
@@ -68,18 +70,23 @@ public class AuthorPostService {
         // Kiểm tra quyền: Chỉ ADMIN hoặc AUTHOR của bài viết
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         if (!hasRole("ADMIN")) {
-            // Giả định: Liên kết Author với User qua username hoặc logic khác
-            // Ở đây, tạm kiểm tra role AUTHOR
             if (!hasRole("AUTHOR")) {
                 throw new AccessDeniedException("Only ADMIN or post's AUTHOR can update this post");
             }
+            // Kiểm tra xem người dùng hiện tại có phải là tác giả của bài viết không
+            // Giả định: Cần liên kết Author với User thông qua username hoặc một trường khác
+            // Ở đây, tạm thời chỉ kiểm tra role AUTHOR
+            // TODO: Cần thêm logic kiểm tra quyền cụ thể (ví dụ: so sánh username với author của post)
         }
 
+        // Chỉ cập nhật các trường được gửi trong form, các trường khác giữ nguyên
+        // Nhờ nullValuePropertyMappingStrategy = IGNORE trong AuthorPostMapper
         authorPostMapper.updateEntityFromForm(form, post);
         post = authorPostRepository.save(post);
         return authorPostMapper.toDTO(post);
     }
 
+    @Transactional
     public void deletePost(Long id) {
         AuthorPost post = authorPostRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found with id: " + id));
@@ -90,6 +97,7 @@ public class AuthorPostService {
             if (!hasRole("AUTHOR")) {
                 throw new AccessDeniedException("Only ADMIN or post's AUTHOR can delete this post");
             }
+            // TODO: Cần thêm logic kiểm tra quyền cụ thể
         }
 
         authorPostRepository.deleteById(id);
@@ -100,5 +108,4 @@ public class AuthorPostService {
                 .stream()
                 .anyMatch(auth -> auth.getAuthority().equals("ROLE_" + role));
     }
-
 }

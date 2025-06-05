@@ -62,6 +62,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/books/category/{categoryId}").hasAnyRole("ADMIN", "CUSTOMER", "AUTHOR")
                         .requestMatchers("/api/v1/books/{id}").hasAnyRole("ADMIN", "CUSTOMER", "AUTHOR")
                         .requestMatchers("/api/v1/books/**").hasRole("ADMIN") // POST, PUT, DELETE
+
+                        .requestMatchers("/api/v1/orders").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/orders/me").hasRole("CUSTOMER")
+                        .requestMatchers("/api/v1/orders/{id}").hasAnyRole("ADMIN", "CUSTOMER")
+                        .requestMatchers("/api/v1/orders/**").hasAnyRole("ADMIN", "CUSTOMER")
+                        .requestMatchers("/api/v1/cart/**").hasRole("CUSTOMER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

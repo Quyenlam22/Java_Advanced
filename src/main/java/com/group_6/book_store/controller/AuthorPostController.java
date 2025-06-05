@@ -44,7 +44,7 @@ public class AuthorPostController {
         return ResponseEntity.ok(post);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<AuthorPostDTO> updatePost(@PathVariable Long id, @Valid @RequestBody AuthorPostUpdateForm form) {
         AuthorPostDTO post = authorPostService.updatePost(id, form);
         return ResponseEntity.ok(post);

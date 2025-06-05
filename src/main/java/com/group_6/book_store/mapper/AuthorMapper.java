@@ -6,8 +6,9 @@ import com.group_6.book_store.form.AuthorCreateForm;
 import com.group_6.book_store.form.AuthorUpdateForm;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AuthorMapper {
     AuthorDTO toDTO(Author author);
     Author toEntity(AuthorCreateForm form);

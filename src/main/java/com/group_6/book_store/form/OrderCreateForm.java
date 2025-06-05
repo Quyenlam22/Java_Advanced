@@ -1,27 +1,31 @@
 package com.group_6.book_store.form;
+
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Getter
-@Setter
 public class OrderCreateForm {
-    @NotNull(message = "ID người dùng không được để trống")
-    private Long userId;
-
-    @NotNull(message = "Tổng tiền không được để trống")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Tổng tiền phải lớn hơn 0")
+    @NotNull(message = "Total amount is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Total amount must be greater than 0")
     private BigDecimal totalAmount;
 
-    @NotBlank(message = "Địa chỉ giao hàng không được để trống")
+    @NotBlank(message = "Shipping address is required")
     private String shippingAddress;
 
-    @NotEmpty(message = "Đơn hàng phải có ít nhất một mục")
-    private List<OrderItemCreateForm> orderItems;
+    @NotEmpty(message = "Order items are required")
+    private List<OrderItemForm> orderItems;
+
+    @AssertTrue(message = "Total amount must match sum of order items")
+    private boolean isTotalAmountValid() {
+        if (orderItems == null || orderItems.isEmpty()) {
+            return false;
+        }
+        BigDecimal calculatedTotal = orderItems.stream()
+                .map(item -> item.getUnitPrice().multiply(new BigDecimal(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return totalAmount.compareTo(calculatedTotal) == 0;
+    }
 }
