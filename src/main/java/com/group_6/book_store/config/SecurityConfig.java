@@ -68,6 +68,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/orders/{id}").hasAnyRole("ADMIN", "CUSTOMER")
                         .requestMatchers("/api/v1/orders/**").hasAnyRole("ADMIN", "CUSTOMER")
                         .requestMatchers("/api/v1/cart/**").hasRole("CUSTOMER")
+
+                        .requestMatchers("/api/v2/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
