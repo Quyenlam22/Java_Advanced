@@ -5,6 +5,13 @@ export const setUser = (items) => {
     })
 }
 
+export const createUser = (item) => {
+    return ({
+        type: "CREATE_USER",
+        item: item,
+    })
+}
+
 export const editUser = (options) => {
     return ({
         type: "EDIT_USER",

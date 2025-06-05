@@ -1,4 +1,4 @@
-import { del, get, patch } from "../utils/request"
+import { del, get, patch, post } from "../utils/request"
 
 export const getCategories = async () => {
     const result = await get("categories");
@@ -7,6 +7,11 @@ export const getCategories = async () => {
 
 export const getDetailCategory = async (id) => {
     const result = await get(`categories?id=${id}`);
+    return result;
+}
+
+export const createNewCategory = async (options) => {
+    const result = await post(options, `categories`);
     return result;
 }
 

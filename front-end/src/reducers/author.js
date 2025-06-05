@@ -3,7 +3,12 @@ const authorReducer = (state = [], action) => {
 
     switch (action.type) {
         case "SET_AUTHOR":
-            return action.items;
+            return action.items.reverse();
+        case "CREATE_AUTHOR":
+            return [
+                action.item,
+                ...newState,
+            ];
         case "EDIT_AUTHOR":
             const index = newState.findIndex(item => item.id === action.options.id);
             newState[index] = action.options;

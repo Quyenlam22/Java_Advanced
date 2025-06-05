@@ -1,4 +1,4 @@
-import { del, get, patch } from "../utils/request";
+import { del, get, patch, post } from "../utils/request";
 
 export const getUser = async (token) => {
     const result = await get(`users?token=${token}`);
@@ -7,6 +7,11 @@ export const getUser = async (token) => {
 
 export const getUserByRole = async (role) => {
     const result = await get(`users?role=${role}`);
+    return result;
+}
+
+export const createNewUser = async (options) => {
+    const result = await post(options, `users`);
     return result;
 }
 

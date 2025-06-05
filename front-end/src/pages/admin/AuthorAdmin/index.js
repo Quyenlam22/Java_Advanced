@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Button, Divider, Popconfirm, Radio, Table } from 'antd';
+import { Button, Divider, Flex, notification, Popconfirm, Radio, Table } from 'antd';
 import { delAuthor, getAuthors } from '../../../services/authorService';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAuthor, setAuthor } from '../../../actions/author';
 import UpdateAuthor from '../../../components/Author/UpdateAuthor';
+import CreateAuthor from '../../../components/Author/CreateAuthor';
 
 const columns = [
   {
@@ -41,8 +42,7 @@ function AuthorAdmin () {
   const [selectionType, setSelectionType] = useState('checkbox');
   const author = useSelector(state => state.authorReducer);
   const dispatch = useDispatch();
-
-  // const [selectedRecord, setSelectedRecord] = useState(null);
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -55,6 +55,10 @@ function AuthorAdmin () {
   const handleDelete = async (id) => {
     await delAuthor(id);
     dispatch(deleteAuthor(id));
+    api['success']({
+        message: `Xóa thông tin tác giả thành công!`,
+        duration: 1.5
+      });
   }
 
   const data = author.map(item => {
@@ -85,11 +89,15 @@ function AuthorAdmin () {
 
   return (
     <>
-      <h1>Danh mục</h1>
-      <Radio.Group onChange={e => setSelectionType(e.target.value)} value={selectionType}>
+      {contextHolder}
+      <h1>Tác giả</h1>
+      <Flex justify='space-between' align='center'>
+        <Radio.Group onChange={e => setSelectionType(e.target.value)} value={selectionType}>
           <Radio value="checkbox">Checkbox</Radio>
           <Radio value="radio">radio</Radio>
-      </Radio.Group>
+        </Radio.Group>
+        <CreateAuthor/>
+      </Flex>
       <Divider />
       <Table
           rowSelection={Object.assign({ type: selectionType }, rowSelection)}

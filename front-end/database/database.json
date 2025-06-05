@@ -3,7 +3,7 @@
     {
       "id": "1",
       "name": "Science Fiction",
-      "description": "Books that explore futuristic and scientific concepts.\n",
+      "description": "Books that explore futuristic and scientific concepts.",
       "created_at": "2025-05-01T10:00:00Z"
     },
     {
@@ -77,8 +77,8 @@
       "price": 19.99,
       "discount": 0.1,
       "stock": 12,
-      "category_id": "3",
-      "author_id": "2",
+      "category_id": 1,
+      "author_id": 1,
       "thumbnail": "foundation.jpg",
       "created_at": "2025-05-03T14:00:00Z",
       "updated_at": "2025-05-03T14:00:00Z"
@@ -194,8 +194,8 @@
       "price": 17.99,
       "discount": 0.2,
       "stock": 16,
-      "category_id": 8,
-      "author_id": 5,
+      "category_id": "3",
+      "author_id": "3",
       "thumbnail": "book_thief.jpg",
       "created_at": "2025-05-08T16:00:00Z",
       "updated_at": "2025-05-08T16:00:00Z"

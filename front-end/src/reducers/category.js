@@ -3,7 +3,12 @@ const categoryReducer = (state = [], action) => {
 
     switch (action.type) {
         case "SET_CATEGORY":
-            return action.items;
+            return action.items.reverse();
+        case "CREATE_CATEGORY":
+            return [
+                action.item,
+                ...newState,
+            ];
         case "EDIT_CATEGORY":
             const index = newState.findIndex(item => item.id === action.options.id);
             newState[index] = action.options;

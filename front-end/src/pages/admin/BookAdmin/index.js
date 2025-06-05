@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Button, Divider, Popconfirm, Radio, Table } from 'antd';
+import { Button, Divider, Flex, notification, Popconfirm, Radio, Table } from 'antd';
 import { delBook, getBook } from '../../../services/bookService';
 import { getDetailCategory } from '../../../services/categoryService';
 import { getDetailAuthor } from '../../../services/authorService';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteBook, setBook } from '../../../actions/book';
 import UpdateBook from '../../../components/TopBook/UpdateBook';
+import CreateBook from '../../../components/TopBook/CreateBook';
 
 const columns = [
   {
@@ -35,11 +36,11 @@ const columns = [
   },
   {
     title: 'Danh mục',
-    dataIndex: 'category_id',
+    dataIndex: 'category_name',
   },
   {
     title: 'Tác giả',
-    dataIndex: 'author_id',
+    dataIndex: 'author_name',
   },
   {
     title: 'Thời gian tạo',
@@ -63,10 +64,15 @@ function BookAdmin () {
   const [selectionType, setSelectionType] = useState('checkbox');
   const book = useSelector(state => state.bookReducer);
   const dispatch = useDispatch();
+  const [api, contextHolder] = notification.useNotification();
 
   const handleDelete = async (id) => {
     await delBook(id);
     dispatch(deleteBook(id));
+    api['success']({
+      message: `Xóa thông tin thể loại thành công!`,
+      duration: 1.5
+    });
   }
 
   useEffect(() => {
@@ -90,12 +96,14 @@ function BookAdmin () {
             price: item.price,
             discount: item.discount,
             stock: item.stock,
-            category_id: item.category.name,
-            author_id: item.author.name,
+            category_id: item.category.id,
+            author_id: item.author.id,
+            category_name: item.category.name,
+            author_name: item.author.name,
             created_at: date,
             actions: (
               <>
-                <UpdateBook item={item}/>
+                <UpdateBook handleDelete={handleDelete} item={item}/>
                 <Popconfirm
                   title="Xóa sách"
                   description="Bạn có chắc xóa sách này?"
@@ -117,11 +125,15 @@ function BookAdmin () {
 
   return (
       <>
+        {contextHolder}
         <h1>Sách</h1>
-        <Radio.Group onChange={e => setSelectionType(e.target.value)} value={selectionType}>
+        <Flex justify='space-between' align='center'>
+          <Radio.Group onChange={e => setSelectionType(e.target.value)} value={selectionType}>
             <Radio value="checkbox">Checkbox</Radio>
-            <Radio value="radio">radio</Radio>
-        </Radio.Group>
+            <Radio value="radio">Radio</Radio>
+          </Radio.Group>
+          <CreateBook handleDelete={handleDelete}/>
+        </Flex>
         <Divider />
         <Table
             rowSelection={Object.assign({ type: selectionType }, rowSelection)}

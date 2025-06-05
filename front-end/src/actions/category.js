@@ -5,6 +5,13 @@ export const setCategory = (items) => {
     })
 }
 
+export const createCategory = (item) => {
+    return ({
+        type: "CREATE_CATEGORY",
+        item: item,
+    })
+}
+
 export const editCategory = (options) => {
     return ({
         type: "EDIT_CATEGORY",

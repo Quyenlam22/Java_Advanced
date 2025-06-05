@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Button, Divider, Popconfirm, Radio, Table } from 'antd';
+import { Button, Divider, Flex, notification, Popconfirm, Radio, Table } from 'antd';
 import { delUser, getUserByRole } from '../../services/userService';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteUser, setUser } from '../../actions/user';
 import UpdateUser from './UpdateUser';
+import CreateUser from './CreateUser';
 
 const columns = [
   {
@@ -55,6 +56,7 @@ function UserManagement (props) {
   const [selectionType, setSelectionType] = useState('checkbox');
   const user = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -67,6 +69,10 @@ function UserManagement (props) {
   const handleDelete = async (id) => {
     await delUser(id);
     dispatch(deleteUser(id));
+    api['success']({
+      message: `Xoá thông tin người dùng thành công!`,
+      duration: 1.5
+    });
   }
 
   const data = user.map(item => {
@@ -101,11 +107,15 @@ function UserManagement (props) {
 
   return (
     <>
+      {contextHolder}
       <h1>Danh sách người dùng</h1>
-      <Radio.Group onChange={e => setSelectionType(e.target.value)} value={selectionType}>
-          <Radio value="checkbox">Checkbox</Radio>
-          <Radio value="radio">radio</Radio>
-      </Radio.Group>
+      <Flex justify='space-between' align='center'>
+        <Radio.Group onChange={e => setSelectionType(e.target.value)} value={selectionType}>
+            <Radio value="checkbox">Checkbox</Radio>
+            <Radio value="radio">radio</Radio>
+        </Radio.Group>
+        <CreateUser role={role}/>
+      </Flex>
       <Divider />
       <Table
           rowSelection={Object.assign({ type: selectionType }, rowSelection)}

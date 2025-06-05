@@ -1,4 +1,4 @@
-import { del, get, patch } from "../utils/request";
+import { del, get, patch, post } from "../utils/request";
 
 export const getBook = async () => {
     const result = await get("books");
@@ -12,6 +12,11 @@ export const getBookById = async (id) => {
 
 export const getBooksByCategory = async (id) => {
     const result = await get(`books?category_id=${id}`);
+    return result;
+}
+
+export const createNewBook = async (options) => {
+    const result = await post(options, `books`);
     return result;
 }
 

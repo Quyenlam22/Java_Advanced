@@ -1,12 +1,39 @@
-import { Button, Form, Input, Modal, notification, Popconfirm, Select } from "antd";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
-import { updateBook } from "../../services/bookService";
-import { deleteBook, editBook } from "../../actions/book";
-import { getAuthors, getDetailAuthor } from "../../services/authorService";
-import { getCategories, getDetailCategory } from "../../services/categoryService";
+import { createStyles } from 'antd-style';
+import { PlusOutlined } from '@ant-design/icons';
+import { Button, ConfigProvider, Form, Input, Modal, notification, Popconfirm, Select } from 'antd';
+import { useEffect, useState } from 'react';
+import { getAuthors } from '../../services/authorService';
+import { getCategories } from '../../services/categoryService';
+import { useDispatch } from 'react-redux';
+import { createBook } from '../../actions/book';
+import UpdateBook from './UpdateBook';
+import { createNewBook } from '../../services/bookService';
 
 const { Option } = Select;
+const useStyle = createStyles(({ prefixCls, css }) => ({
+  linearGradientButton: css`
+    &.${prefixCls}-btn-primary:not([disabled]):not(.${prefixCls}-btn-dangerous) {
+      > span {
+        position: relative;
+      }
+
+      &::before {
+        content: '';
+        background: linear-gradient(135deg, #6253e1, #04befe);
+        position: absolute;
+        inset: -1px;
+        opacity: 1;
+        transition: all 0.3s;
+        border-radius: inherit;
+      }
+
+      &:hover::before {
+        opacity: 0;
+      }
+    }
+  `,
+}));
+
 const rules = [
   { 
     required: true, 
@@ -14,14 +41,15 @@ const rules = [
   }
 ];
 
-function UpdateBook (props) {
-  const { item, handleDelete } = props;
-  const dispatch = useDispatch();
+function CreateBook (props) {
+  const { handleDelete } = props;
+  const { styles } = useStyle();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
   const [dataAuthors, setDataAuthors] = useState([]);
   const [dataCategories, setDataCategories] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -43,61 +71,56 @@ function UpdateBook (props) {
     form.resetFields();
   };
 
-  const handleEdit = (record) => {
-    form.setFieldsValue(record);
-    showModal();
-  };
-
   const handleSubmit = async (values) => {
-    const result = await updateBook(values, values.id);
-    const category = await getDetailCategory(values.category_id);
-    const author = await getDetailAuthor(values.author_id);
-
-    const updatedRecord = {
-      ...values,
-      key: values.id,
-      category_name: category[0]?.name || 'Không có',
-      author_name: author[0]?.name || 'Không có',
-      created_at: new Date(values.created_at).toLocaleDateString(),
+    const result = await createNewBook(values);
+    const item = {
+      ...result,
+      key: result.id,
+      category_name: dataCategories.find(cat => cat.id === result.category_id)?.name || 'Không rõ',
+      author_name: dataAuthors.find(auth => auth.id === result.author_id)?.name || 'Không rõ',
       actions: (
         <>
-          <UpdateBook
-            handleDelete={handleDelete}
-            item={{
-              ...values,
-              category: category[0] || {name: "Không có"},
-              author: author[0] || {name: "Không có"}
-            }}
-          />
+          <UpdateBook item={result} handleDelete={handleDelete} />
           <Popconfirm
             title="Xóa sách"
             description="Bạn có chắc xóa sách này?"
             okText="Đồng ý"
             cancelText="Hủy bỏ"
-            onConfirm={() => handleDelete(values.id)}
+            onConfirm={() => handleDelete(result.id)}
           >
-            <Button type="primary" danger>Xóa</Button>
+            <Button type='primary' danger>Xóa</Button>
           </Popconfirm>
         </>
       )
-    };
-    
-    if(result) {
-      dispatch(editBook(updatedRecord));
-      onCancel();
-      api['success']({
-        message: `Sửa thông tin sách thành công!`,
-        duration: 1.5
-      });
     }
+
+    dispatch(createBook(item));
+    onCancel();
+    api['success']({
+      message: `Thêm thông tin sách thành công!`,
+      duration: 1.5
+    });
   }
 
   return (
     <>
       {contextHolder}
-      <Button className='mr-1' type="primary" onClick={() => handleEdit(item)}>Sửa</Button>
+      <ConfigProvider
+        button={{
+          className: styles.linearGradientButton,
+        }}
+      >
+        <Button 
+          type="primary" 
+          size="large" 
+          icon={<PlusOutlined />}
+          onClick={showModal}
+        >
+            Thêm mới
+        </Button>
+      </ConfigProvider>
       <Modal
-        title="Cập nhật thông tin sách"
+        title="Thêm mới thông tin sách"
         open={isModalOpen}
         footer={null}
         onCancel={onCancel}
@@ -105,12 +128,8 @@ function UpdateBook (props) {
         <Form 
           form={form} 
           layout="vertical"
-          // initialValues={item}
           onFinish={handleSubmit}
         >
-          <Form.Item label="ID" name="id">
-            <Input disabled />
-          </Form.Item>
           <Form.Item
             label="Ảnh"
             name="thumbnail"
@@ -152,8 +171,9 @@ function UpdateBook (props) {
           <Form.Item
             label="Thể loại"
             name="category_id"
+            rules={rules}
           >
-            <Select placeholder="Chọn thể loại">
+            <Select placeholder="Chọn thể loại" >
               {dataCategories.map((cat) => (
                 <Option key={cat.id} value={cat.id}>
                   {cat.name}
@@ -164,8 +184,9 @@ function UpdateBook (props) {
           <Form.Item
             label="Tác giả"
             name="author_id"
+            rules={rules}
           >
-            <Select placeholder="Chọn tác giả">
+            <Select placeholder="Chọn tác giả"  >
               {dataAuthors.map((author) => (
                 <Option key={author.id} value={author.id}>
                   {author.name}
@@ -173,14 +194,8 @@ function UpdateBook (props) {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="Ngày tạo" name="created_at">
-            <Input disabled />
-          </Form.Item>
-          <Form.Item label="Ngày cập nhật" name="updated_at">
-            <Input disabled />
-          </Form.Item>
           <Form.Item >
-            <Button htmlType='submit' type='primary'>Cập nhật</Button>
+            <Button htmlType='submit' type='primary'>Tạo</Button>
           </Form.Item>
         </Form>
       </Modal>
@@ -188,4 +203,4 @@ function UpdateBook (props) {
   )
 }
 
-export default UpdateBook ;
+export default CreateBook;

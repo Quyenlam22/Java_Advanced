@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Button, Divider, Popconfirm, Radio, Table } from 'antd';
+import { Button, Divider, Flex, notification, Popconfirm, Radio, Table } from 'antd';
 import { delCategory, getCategories } from '../../../services/categoryService';
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCategory, setCategory } from '../../../actions/category';
 import UpdateCategory from '../../../components/Category/UpdateCategory';
+import CreateCategory from '../../../components/Category/CreateCategory';
 
 const columns = [
   {
@@ -37,6 +38,7 @@ function CategoryAdmin () {
   const [selectionType, setSelectionType] = useState('checkbox');
   const category = useSelector(state => state.categoryReducer);
   const dispatch = useDispatch();
+  const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -49,6 +51,10 @@ function CategoryAdmin () {
   const handleDelete = async (id) => {
     await delCategory(id);
     dispatch(deleteCategory(id));
+    api['success']({
+      message: `Xóa thông tin thể loại thành công!`,
+      duration: 1.5
+    });
   }
 
   const data = category.map(item => {
@@ -78,11 +84,16 @@ function CategoryAdmin () {
 
   return (
     <>
+      {contextHolder}
       <h1>Danh mục</h1>
-      <Radio.Group onChange={e => setSelectionType(e.target.value)} value={selectionType}>
-        <Radio value="checkbox">Checkbox</Radio>
-        <Radio value="radio">radio</Radio>
-      </Radio.Group>
+      <Flex justify='space-between' align='center'>
+        <Radio.Group onChange={e => setSelectionType(e.target.value)} value={selectionType}>
+          <Radio value="checkbox">Checkbox</Radio>
+          <Radio value="radio">radio</Radio>
+        </Radio.Group>
+        <CreateCategory/>
+      </Flex>
+      
       <Divider />
       <Table
         rowSelection={Object.assign({ type: selectionType }, rowSelection)}

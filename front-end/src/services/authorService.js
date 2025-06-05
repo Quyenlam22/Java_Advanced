@@ -1,4 +1,4 @@
-import { del, get, patch } from "../utils/request"
+import { del, get, patch, post } from "../utils/request"
 
 export const getAuthors = async () => {
     const result = await get("authors");
@@ -7,6 +7,11 @@ export const getAuthors = async () => {
 
 export const getDetailAuthor = async (id) => {
     const result = await get(`authors?id=${id}`);
+    return result;
+}
+
+export const createNewAuthor = async (options) => {
+    const result = await post(options, `authors`);
     return result;
 }
 
