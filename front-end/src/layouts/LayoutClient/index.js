@@ -12,8 +12,8 @@ import { useEffect, useState } from 'react';
 import Logout from '../../components/Logout';
 import CategoryMini from '../../components/Category/CategoryMini';
 import { addPost } from '../../services/cartService';
+import SearchInput from '../../components/SearchInput';
 // import { checkUser } from '../../utils/checkUser';
-const { Search } = Input;
 
 const items = [
     {
@@ -78,9 +78,6 @@ function LayoutDefault () {
         }
     ]
 
-    const onSearch = (value, _e, info) =>
-        console.log(info === null || info === void 0 ? void 0 : info.source, value
-    );
     return (
         <>
             <Layout>
@@ -93,14 +90,7 @@ function LayoutDefault () {
                         </Col>
                         <Col span={8}>
                             <div className="header__search">
-                                <Search
-                                    placeholder="Nhập từ khóa tìm kiếm"
-                                    enterButton="Tìm kiếm"
-                                    size="large"
-                                    allowClear
-                                    // suffix={<AudioOutlined/>}
-                                    onSearch={onSearch}
-                                />
+                                <SearchInput />
                             </div>
                         </Col>
                         <Col span={10}>

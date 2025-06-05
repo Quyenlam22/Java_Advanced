@@ -5,6 +5,7 @@ import Cart from "../../pages/client/Cart";
 import AllCategory from "../../components/TopCategory/AllCategory";
 import PrivateRoute from "../../components/PrivateRoute";
 import Order from "../../pages/client/Order";
+import SearchResult from "../../pages/client/SearchResult";
 
 export const routesClient = [
     {
@@ -28,6 +29,10 @@ export const routesClient = [
             {
                 path: "/cart",
                 element: <Cart/>
+            }, 
+            {
+                path: "/search",
+                element: <SearchResult/>
             }, 
             {
                 element: <PrivateRoute/>,

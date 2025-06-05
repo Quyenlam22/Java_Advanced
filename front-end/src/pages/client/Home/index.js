@@ -1,3 +1,4 @@
+import FeaturedAuthors from "../../../components/Author/FeaturedAuthors";
 import TopBook from "../../../components/TopBook";
 import TopCategory from "../../../components/TopCategory";
 import Welcome from "../../../components/Welcome";
@@ -8,6 +9,7 @@ function Home () {
             <Welcome/>
             <TopCategory/>
             <TopBook/>
+            <FeaturedAuthors/>
         </>
     )
 }

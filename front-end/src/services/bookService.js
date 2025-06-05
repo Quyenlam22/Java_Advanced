@@ -10,6 +10,11 @@ export const getBookById = async (id) => {
     return result;
 }
 
+export const findBooks = async (keyword) => {
+    const result = await get(`books?title=${keyword}`);
+    return result;
+}
+
 export const getBooksByCategory = async (id) => {
     const result = await get(`books?category_id=${id}`);
     return result;
