@@ -33,7 +33,7 @@ const items = [
 
 function LayoutDefault () {
     const token = Cookies.get('token');
-    const fullName = Cookies.get('full_name') || "";
+    const fullName = Cookies.get('fullName') || "";
     const [username, setUsername] = useState(fullName);
 
     const location = useLocation();

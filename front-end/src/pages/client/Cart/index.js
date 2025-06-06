@@ -72,7 +72,7 @@ function Cart() {
                         const bookInfo = await getBookById(item.bookId);
                         return {
                             id: item.bookId,
-                            info: bookInfo[0],
+                            info: bookInfo,
                             quantity: item.quantity
                         };
                     })
@@ -86,7 +86,7 @@ function Cart() {
     const cartId = Cookies.get("cart");
 
     const total = data.reduce((sum, item) => {
-        const priceNew = ((item.info.price*(1 - item.info.discount)));
+        const priceNew = ((item.info.price*(1 - (item.info.discount || 0))));
         return sum + priceNew*item.quantity;        
     }, 0)
 
@@ -117,7 +117,7 @@ function Cart() {
                     <>
                         <CartList data={data}/>
                         <div className="cart__total">
-                            Total Price: <span>{total.toFixed(2)}$</span>
+                            Total Price: <span>{total.toFixed(2)}đ</span>
                         </div>
                         <ConfigProvider
                             button={{

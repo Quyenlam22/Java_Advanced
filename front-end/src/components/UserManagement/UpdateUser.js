@@ -69,11 +69,8 @@ function UpdateUser (props) {
           <Form.Item label="Email" name="email" rules={[{ type: "email", required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Họ và tên" name="full_name" rules={rules}>
+          <Form.Item label="Họ và tên" name="fullName" rules={rules}>
             <Input />
-          </Form.Item>
-          <Form.Item label="Mật khẩu" name="password" rules={rules}>
-            <Input.Password />
           </Form.Item>
           <Form.Item label="Vai trò" name="role" rules={rules}>
             <Select>
@@ -87,7 +84,7 @@ function UpdateUser (props) {
           <Form.Item label="Số điện thoại" name="phone" rules={rules}>
             <Input />
           </Form.Item>
-          <Form.Item label="Ngày tạo" name="created_at">
+          <Form.Item label="Ngày tạo" name="createdAt">
             <Input disabled />
           </Form.Item>
         <Form.Item >

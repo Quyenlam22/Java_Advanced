@@ -18,11 +18,18 @@ const columns = [
   },
   {
     title: "Ảnh",
-    dataIndex: "profile_image"
+    dataIndex: "profileImage",
+    render: (url, record) => (
+      <img 
+        src={url} 
+        alt={record.name} 
+        style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: '8px' }} 
+      />
+    )
   },
   {
     title: 'Thời gian tạo',
-    dataIndex: 'created_at',
+    dataIndex: 'createdAt',
   }, 
   {
     title: 'Hành động',
@@ -47,7 +54,7 @@ function AuthorAdmin () {
   useEffect(() => {
     const fetchApi = async () => {
         const result = await getAuthors();
-        dispatch(setAuthor(result));
+        dispatch(setAuthor(result.content));
     }
     fetchApi();
   }, [])
@@ -62,14 +69,14 @@ function AuthorAdmin () {
   }
 
   const data = author.map(item => {
-    const date = new Date(item.created_at).toLocaleDateString();
+    const date = new Date(item.createdAt).toLocaleDateString();
 
     return {
       key: item.id,
       name: item.name,
       bio: item.bio,
-      profile_image: item.profile_image,
-      created_at: date,
+      profileImage: item.profileImage,
+      createdAt: date,
       actions: (
         <>
           <UpdateAuthor item={item}/>

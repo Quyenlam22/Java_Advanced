@@ -12,7 +12,7 @@ function TopCategory () {
     useEffect(() => {
         const fetchApi = async () => {
             const result = await getCategories();
-            setData(result);
+            setData(result.content);
         }
 
         fetchApi();

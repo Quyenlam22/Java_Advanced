@@ -56,8 +56,8 @@ function CreateBook (props) {
       const resultAuthors = await getAuthors();
       const resultCategories = await getCategories();
 
-      setDataAuthors(resultAuthors);
-      setDataCategories(resultCategories);
+      setDataAuthors(resultAuthors.content);
+      setDataCategories(resultCategories.content);
     }
 
     fetchApi();
@@ -76,8 +76,8 @@ function CreateBook (props) {
     const item = {
       ...result,
       key: result.id,
-      category_name: dataCategories.find(cat => cat.id === result.category_id)?.name || 'Không rõ',
-      author_name: dataAuthors.find(auth => auth.id === result.author_id)?.name || 'Không rõ',
+      categoryName: dataCategories.find(cat => cat.id === result.categoryId)?.name || 'Không rõ',
+      authorName: dataAuthors.find(auth => auth.id === result.authorId)?.name || 'Không rõ',
       actions: (
         <>
           <UpdateBook item={result} handleDelete={handleDelete} />
@@ -132,7 +132,7 @@ function CreateBook (props) {
         >
           <Form.Item
             label="Ảnh"
-            name="thumbnail"
+            name="imageUrl"
           >
             <Input />
           </Form.Item>
@@ -156,12 +156,12 @@ function CreateBook (props) {
           >
             <Input type="number" step="0.01" />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="Giảm giá (%)"
             name="discount"
           >
             <Input type="number" step="0.01" min={0} max={1} />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="Tồn kho"
             name="stock"
@@ -170,7 +170,7 @@ function CreateBook (props) {
           </Form.Item>
           <Form.Item
             label="Thể loại"
-            name="category_id"
+            name="categoryId"
             rules={rules}
           >
             <Select placeholder="Chọn thể loại" >
@@ -183,7 +183,7 @@ function CreateBook (props) {
           </Form.Item>
           <Form.Item
             label="Tác giả"
-            name="author_id"
+            name="authorId"
             rules={rules}
           >
             <Select placeholder="Chọn tác giả"  >

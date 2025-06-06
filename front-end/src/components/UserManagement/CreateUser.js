@@ -103,11 +103,8 @@ function CreateUser(props) {
           <Form.Item label="Email" name="email" rules={[{ type: "email", required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item label="Họ và tên" name="full_name" rules={rules}>
+          <Form.Item label="Họ và tên" name="fullName" rules={rules}>
             <Input />
-          </Form.Item>
-          <Form.Item label="Mật khẩu" name="password" rules={rules}>
-            <Input.Password />
           </Form.Item>
           <Form.Item label="Địa chỉ" name="address">
             <Input />

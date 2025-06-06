@@ -19,7 +19,7 @@ const columns = [
   },
   {
     title: "Họ và tên",
-    dataIndex: "full_name"
+    dataIndex: "fullName"
   },
   {
     title: "Địa chỉ",
@@ -35,7 +35,7 @@ const columns = [
   },
   {
     title: 'Thời gian tạo',
-    dataIndex: 'created_at',
+    dataIndex: 'createdAt',
   }, 
   {
     title: 'Hành động',
@@ -61,7 +61,7 @@ function UserManagement (props) {
   useEffect(() => {
     const fetchApi = async () => {
         const result = await getUserByRole(role);
-        dispatch(setUser(result));
+        dispatch(setUser(result.content));
     }
     fetchApi();
   }, [])
@@ -76,18 +76,17 @@ function UserManagement (props) {
   }
 
   const data = user.map(item => {
-    const date = new Date(item.created_at).toLocaleDateString();
+    const date = new Date(item.createdAt).toLocaleDateString();
 
     return {
       key: item.id,
       username: item.username,
       email: item.email,
-      password: item.password,
-      full_name: item.full_name,
+      fullName: item.fullName,
       address: item.address,
       phone: item.phone,
       role: item.role,
-      created_at: date,
+      createdAt: date,
       actions: (
         <>
           <UpdateUser item={item}/>

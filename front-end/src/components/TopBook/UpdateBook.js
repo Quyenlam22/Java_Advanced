@@ -2,7 +2,7 @@ import { Button, Form, Input, Modal, notification, Popconfirm, Select } from "an
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { updateBook } from "../../services/bookService";
-import { deleteBook, editBook } from "../../actions/book";
+import { editBook } from "../../actions/book";
 import { getAuthors, getDetailAuthor } from "../../services/authorService";
 import { getCategories, getDetailCategory } from "../../services/categoryService";
 
@@ -28,8 +28,8 @@ function UpdateBook (props) {
       const resultAuthors = await getAuthors();
       const resultCategories = await getCategories();
 
-      setDataAuthors(resultAuthors);
-      setDataCategories(resultCategories);
+      setDataAuthors(resultAuthors.content);
+      setDataCategories(resultCategories.content);
     }
 
     fetchApi();
@@ -50,23 +50,23 @@ function UpdateBook (props) {
 
   const handleSubmit = async (values) => {
     const result = await updateBook(values, values.id);
-    const category = await getDetailCategory(values.category_id);
-    const author = await getDetailAuthor(values.author_id);
+    const category = await getDetailCategory(values.categoryId);
+    const author = await getDetailAuthor(values.authorId);
 
     const updatedRecord = {
       ...values,
       key: values.id,
-      category_name: category[0]?.name || 'Không có',
-      author_name: author[0]?.name || 'Không có',
-      created_at: new Date(values.created_at).toLocaleDateString(),
+      categoryName: category?.name || 'Không có',
+      authorName: author?.name || 'Không có',
+      createdAt: new Date(values.createdAt).toLocaleDateString(),
       actions: (
         <>
           <UpdateBook
             handleDelete={handleDelete}
             item={{
               ...values,
-              category: category[0] || {name: "Không có"},
-              author: author[0] || {name: "Không có"}
+              category: category || {name: "Không có"},
+              author: author || {name: "Không có"}
             }}
           />
           <Popconfirm
@@ -113,7 +113,7 @@ function UpdateBook (props) {
           </Form.Item>
           <Form.Item
             label="Ảnh"
-            name="thumbnail"
+            name="imageUrl"
           >
             <Input />
           </Form.Item>
@@ -137,12 +137,12 @@ function UpdateBook (props) {
           >
             <Input type="number" step="0.01" />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="Giảm giá (%)"
             name="discount"
           >
             <Input type="number" step="0.01" min={0} max={1} />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="Tồn kho"
             name="stock"
@@ -151,7 +151,7 @@ function UpdateBook (props) {
           </Form.Item>
           <Form.Item
             label="Thể loại"
-            name="category_id"
+            name="categoryId"
           >
             <Select placeholder="Chọn thể loại">
               {dataCategories.map((cat) => (
@@ -163,7 +163,7 @@ function UpdateBook (props) {
           </Form.Item>
           <Form.Item
             label="Tác giả"
-            name="author_id"
+            name="authorId"
           >
             <Select placeholder="Chọn tác giả">
               {dataAuthors.map((author) => (
@@ -173,10 +173,10 @@ function UpdateBook (props) {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item label="Ngày tạo" name="created_at">
+          <Form.Item label="Ngày tạo" name="createdAt">
             <Input disabled />
           </Form.Item>
-          <Form.Item label="Ngày cập nhật" name="updated_at">
+          <Form.Item label="Ngày cập nhật" name="updatedAt">
             <Input disabled />
           </Form.Item>
           <Form.Item >

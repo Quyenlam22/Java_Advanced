@@ -17,10 +17,10 @@ function Category () {
         const fetchApi = async () => {
             try {
                 const result = await getBooksByCategory(id);
-                setData(result);
+                setData(result.content);
 
                 const record = await getDetailCategory(id);
-                setCategory(record[0]);
+                setCategory(record);
             } catch (error) {
                 console.error("Error fetching:", error);
             }

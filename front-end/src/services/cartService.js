@@ -1,4 +1,4 @@
-import { del, get, patch, post } from "../utils/request";
+import { del, get, patch, post } from "../utils/requestLocal";
 
 export const getCart = async (id) => {
     const result = await get(`carts/${id}`);

@@ -55,9 +55,9 @@ function CartItem(props) {
             <div className="cart__content">
                 <h3>{item.info.title}</h3>
                 <div className="cart__price-new">
-                    {((item.info.price * (1 - item.info.discount))).toFixed(2)}$
+                    {((item.info.price * (1 - item.info.discount)) || item.info.price).toFixed(2)}đ
                 </div>
-                <div className="cart__price-old">{item.info.price}$</div>
+                <div className="cart__price-old">{item.info.price}đ</div>
             </div>
             <div className="cart__quantity">
                 <button onClick={() => handleChangeQuantity(-1)}>-</button>

@@ -6,7 +6,7 @@ export const getCategories = async () => {
 }
 
 export const getDetailCategory = async (id) => {
-    const result = await get(`categories?id=${id}`);
+    const result = await get(`categories/${id}`);
     return result;
 }
 

@@ -6,17 +6,17 @@ export const getBook = async () => {
 }
 
 export const getBookById = async (id) => {
-    const result = await get(`books?id=${id}`);
+    const result = await get(`books/${id}`);
     return result;
 }
 
 export const findBooks = async (keyword) => {
-    const result = await get(`books?title=${keyword}`);
+    const result = await get(`books/search?searchTerm=${keyword}`);
     return result;
 }
 
 export const getBooksByCategory = async (id) => {
-    const result = await get(`books?category_id=${id}`);
+    const result = await get(`books/category/${id}`);
     return result;
 }
 

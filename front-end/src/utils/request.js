@@ -1,13 +1,13 @@
-const API_DOMAIN = `http://localhost:3003`;
+const API_BE = `http://localhost:8080/api/v2`;
 
 export const get = async (path) => {
-    const response = await fetch(`${API_DOMAIN}/${path}`);
+    const response = await fetch(`${API_BE}/${path}`);
     const result = await response.json();
     return result;
 }
 
 export const post = async (options, path) => {
-    const response = await fetch(`${API_DOMAIN}/${path}`, {
+    const response = await fetch(`${API_BE}/${path}`, {
         method: "POST",
         headers: {
             Accept: "application/json",
@@ -19,8 +19,21 @@ export const post = async (options, path) => {
     return result;
 }
 
+export const put = async (options, path) => {
+    const response = await fetch(`${API_BE}/${path}`, {
+        method: "PUT",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(options)
+    });
+    const result = await response.json();
+    return result;
+}
+
 export const patch = async (options, path) => {
-    const response = await fetch(`${API_DOMAIN}/${path}`, {
+    const response = await fetch(`${API_BE}/${path}`, {
         method: "PATCH",
         headers: {
             Accept: "application/json",
@@ -33,9 +46,9 @@ export const patch = async (options, path) => {
 }
 
 export const del = async (path) => {
-    const response = await fetch(`${API_DOMAIN}/${path}`, {
+    await fetch(`${API_BE}/${path}`, {
         method: "DELETE"
     });
-    const result = await response.json();
-    return result;
+    // const result = await response.json();
+    // return result;
 }

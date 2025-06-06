@@ -6,7 +6,7 @@ export const getAuthors = async () => {
 }
 
 export const getDetailAuthor = async (id) => {
-    const result = await get(`authors?id=${id}`);
+    const result = await get(`authors/${id}`);
     return result;
 }
 
@@ -21,6 +21,5 @@ export const updateAuthor = async (options, id) => {
 }
 
 export const delAuthor = async (id) => {
-    const result = await del(`authors/${id}`);
-    return result;
+    await del(`authors/${id}`);
 }

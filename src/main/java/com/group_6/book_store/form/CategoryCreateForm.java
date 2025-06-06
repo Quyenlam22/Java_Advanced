@@ -1,19 +1,14 @@
 package com.group_6.book_store.form;
 
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Getter
-@Setter
 public class CategoryCreateForm {
-    @NotBlank(message = "Tên danh mục không được để trống")
-    @Size(max = 50, message = "Tên danh mục không được vượt quá 50 ký tự")
+    @NotBlank(message = "Name is required")
+    @Size(max = 50, message = "Name must not exceed 50 characters")
     private String name;
 
-    @NotNull(message = "Mô tả không được để trống")
     private String description;
 }

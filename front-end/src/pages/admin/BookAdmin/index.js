@@ -10,9 +10,15 @@ import CreateBook from '../../../components/TopBook/CreateBook';
 
 const columns = [
   {
-    title: 'Ảnh',
-    dataIndex: 'thumbnail',
-    render: text => <a>{text}</a>,
+    title: "Ảnh",
+    dataIndex: "imageUrl",
+    render: (url, record) => (
+      <img 
+        src={url} 
+        alt={record.title} 
+        style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: '8px' }} 
+      />
+    )
   },
   {
     title: 'Tiêu đề',
@@ -26,25 +32,25 @@ const columns = [
     title: 'Giá',
     dataIndex: 'price',
   },
-  {
-    title: 'Giảm giá',
-    dataIndex: 'discount',
-  },
+  // {
+  //   title: 'Giảm giá',
+  //   dataIndex: 'discount',
+  // },
   {
     title: 'Số lượng',
     dataIndex: 'stock',
   },
   {
     title: 'Danh mục',
-    dataIndex: 'category_name',
+    dataIndex: 'categoryName',
   },
   {
     title: 'Tác giả',
-    dataIndex: 'author_name',
+    dataIndex: 'authorName',
   },
   {
     title: 'Thời gian tạo',
-    dataIndex: 'created_at',
+    dataIndex: 'createdAt',
   },
   {
     title: 'Hành động',
@@ -79,28 +85,23 @@ function BookAdmin () {
     const fetchApi = async () => {
       const result = await getBook();
 
-      const newData = await Promise.all(result.map(async (item) => {
-        const date = new Date(item.created_at).toLocaleDateString();
-        const category = await getDetailCategory(item.category_id);
-        const author = await getDetailAuthor(item.author_id);
-
-        item.category = category[0] || {name: "Không có"};
-        item.author = author[0] || {name: "Không có"};
+      const data = result.content.map( (item) => {
+        const date = new Date(item.createdAt).toLocaleDateString();
         
         return {
             key: item.id,
             id: item.id,
-            thumbnail: item.thumbnail,
+            imageUrl: item.imageUrl,
             title: item.title,
             description: item.description,
             price: item.price,
-            discount: item.discount,
+            // discount: item.discount,
             stock: item.stock,
-            category_id: item.category.id,
-            author_id: item.author.id,
-            category_name: item.category.name,
-            author_name: item.author.name,
-            created_at: date,
+            categoryId: item.categoryId,
+            authorId: item.authorId,
+            categoryName: item.categoryName,
+            authorName: item.authorName,
+            createdAt: date,
             actions: (
               <>
                 <UpdateBook handleDelete={handleDelete} item={item}/>
@@ -116,9 +117,9 @@ function BookAdmin () {
               </>
             )
         };
-      }));
+      });
 
-      dispatch(setBook(newData));      
+      dispatch(setBook(data));      
     }
     fetchApi();
   }, [])

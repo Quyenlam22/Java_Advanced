@@ -46,7 +46,7 @@ function Login (props) {
         const result = await checkLogin(values.username, values.password);
 
         if(result.length > 0){
-            setUsername(result[0].full_name);
+            setUsername(result[0].fullName);
             setIsModalOpen(false);
 
             // const cart = await getCartByUser(result[0].id);
@@ -58,8 +58,8 @@ function Login (props) {
             //     checkUser();
             // }
             Cookies.set('token', result[0].token, { expires: 7 })
-            Cookies.set('full_name', result[0].full_name, { expires: 7 })
-            openNotification(result[0].full_name);
+            Cookies.set('fullName', result[0].fullName, { expires: 7 })
+            openNotification(result[0].fullName);
         }
         else {
             openNotification();

@@ -74,7 +74,7 @@ function UpdateCategory (props) {
           >
             <Input.TextArea rows={3} />
           </Form.Item>
-          <Form.Item label="Ngày tạo" name="created_at">
+          <Form.Item label="Ngày tạo" name="createdAt">
             <Input disabled />
           </Form.Item>
           <Form.Item >

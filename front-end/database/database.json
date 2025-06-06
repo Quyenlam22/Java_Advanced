@@ -208,7 +208,7 @@
       "email": "admin001@example.com",
       "password": "$2b$10$hashedpassworduser001",
       "role": "ADMIN",
-      "full_name": "Trần Thị B",
+      "fullName": "Trần Thị B",
       "address": "456 Đường Nguyễn Trãi, Hà Nội",
       "phone": "0912345678",
       "created_at": "2025-01-05T09:15:00Z",
@@ -221,7 +221,7 @@
       "email": "user001@example.com",
       "password": "$2b$10$hashedpassworduser001",
       "role": "CUSTOMER",
-      "full_name": "Trần Thị B",
+      "fullName": "Trần Thị B",
       "address": "456 Đường Nguyễn Trãi, Hà Nội",
       "phone": "0912345678",
       "created_at": "2025-01-05T09:15:00Z",
@@ -234,7 +234,7 @@
       "email": "john.doe@example.com",
       "password": "$2b$10$hashedpasswordjohn",
       "role": "CUSTOMER",
-      "full_name": "John Doe",
+      "fullName": "John Doe",
       "address": "789 Trần Hưng Đạo, TP. Đà Nẵng",
       "phone": "0987654321",
       "created_at": "2025-02-20T14:30:00Z",
@@ -249,6 +249,40 @@
         {
           "bookId": "2",
           "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "bc70",
+      "bookItems": []
+    },
+    {
+      "id": "8c0f",
+      "bookItems": [
+        {
+          "bookId": 1,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "e060",
+      "bookItems": []
+    },
+    {
+      "id": "038b",
+      "bookItems": []
+    },
+    {
+      "id": "d397",
+      "bookItems": [
+        {
+          "bookId": 1,
+          "quantity": 4
+        },
+        {
+          "bookId": 2,
+          "quantity": 4
         }
       ]
     }

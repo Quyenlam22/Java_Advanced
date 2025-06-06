@@ -106,7 +106,7 @@ function CreateAuthor() {
           </Form.Item>
           <Form.Item
             label="Ảnh"
-            name="profile_image"
+            name="profileImage"
           >
             <Input />
           </Form.Item>

@@ -15,7 +15,7 @@ function Logout (props) {
 
     const handleClick = () => {
         Cookies.remove('token');
-        Cookies.remove('cart');
+        // Cookies.remove('cart');
         Cookies.remove('full_name');
         setUsername("");
         openNotification();

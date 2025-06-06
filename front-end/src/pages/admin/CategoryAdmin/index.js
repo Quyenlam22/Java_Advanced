@@ -18,7 +18,7 @@ const columns = [
   },
   {
     title: 'Thời gian tạo',
-    dataIndex: 'created_at',
+    dataIndex: 'createdAt',
   }, 
   {
     title: 'Hành động',
@@ -43,7 +43,7 @@ function CategoryAdmin () {
   useEffect(() => {
     const fetchApi = async () => {
         const result = await getCategories();
-        dispatch(setCategory(result));
+        dispatch(setCategory(result.content));
     }
     fetchApi();
   }, [])
@@ -58,13 +58,13 @@ function CategoryAdmin () {
   }
 
   const data = category.map(item => {
-    const date = new Date(item.created_at).toLocaleDateString();
+    const date = new Date(item.createdAt).toLocaleDateString();
 
     return {
       key: item.id,
       name: item.name,
       description: item.description,
-      created_at: date,
+      createdAt: date,
       actions: (
         <>
           <UpdateCategory item={item}/>

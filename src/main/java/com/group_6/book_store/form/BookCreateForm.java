@@ -1,35 +1,30 @@
 package com.group_6.book_store.form;
 
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Getter
-@Setter
 public class BookCreateForm {
-    @NotBlank(message = "Tiêu đề không được để trống")
-    @Size(max = 255, message = "Tiêu đề không được vượt quá 255 ký tự")
+    @NotBlank(message = "Title is required")
+    @Size(max = 255, message = "Title must not exceed 255 characters")
     private String title;
 
     private String description;
 
-    @NotNull(message = "Giá không được để trống")
-    @DecimalMin(value = "0.0", inclusive = false, message = "Giá phải lớn hơn 0")
+    @NotNull(message = "Price is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private BigDecimal price;
 
-    @NotNull(message = "Số lượng tồn kho không được để trống")
-    @Min(value = 0, message = "Số lượng tồn kho không được âm")
+    @NotNull(message = "Stock is required")
+    @Min(value = 0, message = "Stock cannot be negative")
     private Integer stock;
 
     private Long categoryId;
 
     private Long authorId;
 
-    @Size(max = 255, message = "URL ảnh không được vượt quá 255 ký tự")
+    @Size(max = 255, message = "Image URL must not exceed 255 characters")
     private String imageUrl;
 }

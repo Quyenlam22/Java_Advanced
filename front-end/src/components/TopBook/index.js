@@ -13,7 +13,7 @@ function TopBook () {
     useEffect(() => {
         const fetchApi = async () => {
             const result = await getBook();
-            setData(result)
+            setData(result.content)
         }
         fetchApi()
     }, [])

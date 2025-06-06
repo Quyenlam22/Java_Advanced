@@ -4,25 +4,18 @@ import com.group_6.book_store.dto.AuthorPostDTO;
 import com.group_6.book_store.entity.AuthorPost;
 import com.group_6.book_store.form.AuthorPostCreateForm;
 import com.group_6.book_store.form.AuthorPostUpdateForm;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring", uses = {AuthorMapper.class})
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AuthorPostMapper {
     @Mapping(source = "author.id", target = "authorId")
+    @Mapping(source = "author.name", target = "authorName")
     AuthorPostDTO toDTO(AuthorPost authorPost);
 
-    @Mapping(source = "authorId", target = "author.id")
-    AuthorPost toEntity(AuthorPostDTO dto);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(source = "authorId", target = "author.id")
-    @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
-    @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
     AuthorPost toEntity(AuthorPostCreateForm form);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "author", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
     void updateEntityFromForm(AuthorPostUpdateForm form, @MappingTarget AuthorPost authorPost);
 }
