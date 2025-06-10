@@ -1,9 +1,12 @@
 package com.group_6.book_store.controller;
 
-import com.group_6.book_store.dto.CartDTO;
+import com.group_6.book_store.dto.TempCartDTO;
+import com.group_6.book_store.dto.UserCartDTO;
 import com.group_6.book_store.form.CartItemCreateForm;
 import com.group_6.book_store.form.CartItemUpdateForm;
 import com.group_6.book_store.service.CartServiceV2;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,33 +23,52 @@ public class CartControllerV2 {
         this.cartServiceV2 = cartServiceV2;
     }
 
-    @GetMapping("/cart")
-    public ResponseEntity<List<CartDTO>> getAllCarts(@RequestParam Long userId) {
-        List<CartDTO> carts = cartServiceV2.getAllCarts(userId);
-        return ResponseEntity.ok(carts);
+    // Lấy giỏ hàng (tự động tạo nếu chưa có)
+    @GetMapping("/carts")
+    public ResponseEntity<?> getCart(HttpServletRequest request, HttpServletResponse response) {
+        Object cart = cartServiceV2.getCart(request, response);
+        return ResponseEntity.ok(cart);
     }
 
-    @PostMapping("/cart/items")
-    public ResponseEntity<List<CartDTO>> addItemToCart(@Valid @RequestBody CartItemCreateForm form, @RequestParam Long userId) {
-        List<CartDTO> carts = cartServiceV2.addItemToCart(userId, form);
-        return ResponseEntity.ok(carts);
+    // Thêm sản phẩm vào giỏ hàng
+    @PostMapping("/carts/items")
+    public ResponseEntity<?> addItemToCart(@Valid @RequestBody CartItemCreateForm form, HttpServletRequest request, HttpServletResponse response) {
+        Object cart = cartServiceV2.addItemToCart(form, request, response);
+        return ResponseEntity.ok(cart);
     }
 
-    @PatchMapping("/cart/items/{bookId}")
-    public ResponseEntity<List<CartDTO>> updateCartItem(@PathVariable String bookId, @Valid @RequestBody CartItemUpdateForm form, @RequestParam Long userId) {
-        List<CartDTO> carts = cartServiceV2.updateCartItem(userId, bookId, form);
-        return ResponseEntity.ok(carts);
+    // Cập nhật sản phẩm trong giỏ hàng
+    @PatchMapping("/carts/items/{bookId}")
+    public ResponseEntity<?> updateCartItem(@PathVariable String bookId, @Valid @RequestBody CartItemUpdateForm form, HttpServletRequest request, HttpServletResponse response) {
+        Object cart = cartServiceV2.updateCartItem(bookId, form, request, response);
+        return ResponseEntity.ok(cart);
     }
 
-    @DeleteMapping("/cart/items/{bookId}")
-    public ResponseEntity<List<CartDTO>> removeCartItem(@PathVariable String bookId, @RequestParam Long userId) {
-        List<CartDTO> carts = cartServiceV2.removeCartItem(userId, bookId);
-        return ResponseEntity.ok(carts);
+    // Xóa sản phẩm khỏi giỏ hàng
+    @DeleteMapping("/carts/items/{bookId}")
+    public ResponseEntity<?> removeCartItem(@PathVariable String bookId, HttpServletRequest request, HttpServletResponse response) {
+        Object cart = cartServiceV2.removeCartItem(bookId, request, response);
+        return ResponseEntity.ok(cart);
     }
 
-    @DeleteMapping("/cart")
-    public ResponseEntity<Void> clearCart(@RequestParam Long userId) {
-        cartServiceV2.clearCart(userId);
+    // Xóa toàn bộ giỏ hàng
+    @DeleteMapping("/carts")
+    public ResponseEntity<Void> clearCart(HttpServletRequest request, HttpServletResponse response) {
+        cartServiceV2.clearCart(request, response);
         return ResponseEntity.noContent().build();
+    }
+
+    // Tạo giỏ hàng rỗng
+    @PostMapping("/carts/create")
+    public ResponseEntity<?> createEmptyCart(HttpServletRequest request, HttpServletResponse response) {
+        Object cart = cartServiceV2.createEmptyCart(request, response);
+        return ResponseEntity.ok(cart);
+    }
+
+    // Đồng bộ giỏ hàng từ cookie sang DB khi đăng nhập
+    @PostMapping("/carts/sync")
+    public ResponseEntity<UserCartDTO> syncCartFromCookieToDB(HttpServletRequest request, HttpServletResponse response) {
+        UserCartDTO cart = cartServiceV2.syncCartFromCookieToDB(request, response);
+        return ResponseEntity.ok(cart);
     }
 }

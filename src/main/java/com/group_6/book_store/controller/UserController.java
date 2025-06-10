@@ -27,7 +27,7 @@ public class UserController {
 
     @PostMapping("/auth/register")
     public ResponseEntity<AuthResponseDTO> register(@Valid @RequestBody UserRegisterForm form) {
-        AuthResponseDTO response = authService.register(form);
+        AuthResponseDTO response = (AuthResponseDTO) authService.register(form);
         return ResponseEntity.ok(response);
     }
 
@@ -37,11 +37,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/auth/refresh")
-    public ResponseEntity<AuthResponseDTO> refresh(@RequestBody String refreshToken) {
-        AuthResponseDTO response = authService.refreshToken(refreshToken);
-        return ResponseEntity.ok(response);
-    }
+
 
     @GetMapping("/users")
     public ResponseEntity<Page<UserDTO>> getAllUsers(Pageable pageable) {

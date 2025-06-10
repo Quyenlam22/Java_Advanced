@@ -55,7 +55,6 @@ public class OrderServiceV2 {
         if (order == null) {
             throw new RuntimeException("Order not found with id: " + id);
         }
-        // Kiểm tra xem đơn hàng có thuộc về userId không
         if (!order.getUser().getId().equals(userId)) {
             throw new RuntimeException("You can only view your own orders");
         }
@@ -69,9 +68,11 @@ public class OrderServiceV2 {
 
         Order order = orderMapper.toEntity(form);
         order.setUser(user);
-        order.setStatus(Order.OrderStatus.PENDING);
+        order.setStatus(Order.OrderStatus.UNPROCESSED);
 
         List<OrderItem> orderItems = new ArrayList<>();
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
         for (OrderItemForm itemForm : form.getOrderItems()) {
             Book book = bookRepository.findById(itemForm.getBookId())
                     .orElseThrow(() -> new RuntimeException("Book not found with id: " + itemForm.getBookId()));
@@ -85,10 +86,17 @@ public class OrderServiceV2 {
             orderItem.setOrder(order);
             orderItem.setBook(book);
             orderItems.add(orderItem);
+
+            // Tính toán giá sau khi áp dụng discount
+            BigDecimal discountedPrice = itemForm.getUnitPrice()
+                    .multiply(BigDecimal.ONE.subtract(itemForm.getDiscount().divide(BigDecimal.valueOf(100))));
+            totalAmount = totalAmount.add(discountedPrice.multiply(new BigDecimal(itemForm.getQuantity())));
+
             book.setStock(book.getStock() - itemForm.getQuantity());
             bookRepository.save(book);
         }
         order.setOrderItems(orderItems);
+        order.setTotalAmount(totalAmount);
         order = orderRepository.save(order);
         return orderMapper.toDTO(order);
     }
@@ -107,8 +115,11 @@ public class OrderServiceV2 {
 
         Order order = new Order();
         order.setUser(user);
-        order.setStatus(Order.OrderStatus.PENDING);
-        order.setShippingAddress(shippingAddress);
+        order.setStatus(Order.OrderStatus.UNPROCESSED);
+        order.setFullName(cart.getUser().getFullName()); // Giả sử User có trường fullName
+        order.setPhone(cart.getUser().getPhone());       // Giả sử User có trường phone
+        order.setAddress(shippingAddress);
+        order.setCartId(cart.getId().toString());
 
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal totalAmount = BigDecimal.ZERO;
@@ -123,8 +134,14 @@ public class OrderServiceV2 {
             orderItem.setBook(book);
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setUnitPrice(book.getPrice());
+            orderItem.setDiscount(BigDecimal.ZERO); // Mặc định không có discount từ cart
             orderItems.add(orderItem);
-            totalAmount = totalAmount.add(book.getPrice().multiply(new BigDecimal(cartItem.getQuantity())));
+
+            // Tính giá sau discount (nếu có)
+            BigDecimal discountedPrice = book.getPrice()
+                    .multiply(BigDecimal.ONE.subtract(orderItem.getDiscount().divide(BigDecimal.valueOf(100))));
+            totalAmount = totalAmount.add(discountedPrice.multiply(new BigDecimal(cartItem.getQuantity())));
+
             book.setStock(book.getStock() - cartItem.getQuantity());
             bookRepository.save(book);
         }

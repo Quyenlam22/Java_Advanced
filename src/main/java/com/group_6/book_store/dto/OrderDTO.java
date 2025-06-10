@@ -11,11 +11,18 @@ import java.util.List;
 public class OrderDTO {
     private Long id;
     private Long userId;
-    private String username;
+    private UserInfo userInfo;
+    private String cartId;
     private BigDecimal totalAmount;
     private Order.OrderStatus status;
-    private String shippingAddress;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private List<OrderItemDTO> orderItems;
+
+    @Data
+    public static class UserInfo {
+        private String fullName;
+        private String phone;
+        private String address;
+    }
 }

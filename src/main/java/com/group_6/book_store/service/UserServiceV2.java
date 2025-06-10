@@ -7,6 +7,7 @@ import com.group_6.book_store.mapper.UserMapper;
 import com.group_6.book_store.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +16,12 @@ public class UserServiceV2 {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceV2(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceV2(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Page<UserDTO> getAllUsers(Pageable pageable) {
@@ -31,6 +34,10 @@ public class UserServiceV2 {
                 .map(userMapper::toDTO);
     }
 
+    public Page<UserDTO> getUsersByRole(String role, Pageable pageable) {
+        return userRepository.findByRole(User.Role.valueOf(role.toUpperCase()), pageable)
+                .map(userMapper::toDTO);
+    }
     public UserDTO getUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
@@ -42,15 +49,12 @@ public class UserServiceV2 {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
-        // Kiểm tra nếu username được gửi và không trùng với username hiện tại
         if (form.getUsername() != null && !form.getUsername().equals(user.getUsername())) {
             if (userRepository.findByUsername(form.getUsername()).isPresent()) {
                 throw new RuntimeException("Username already exists");
             }
         }
 
-        // Chỉ cập nhật các trường được gửi trong form, các trường khác giữ nguyên
-        // Nhờ nullValuePropertyMappingStrategy = IGNORE trong UserMapper
         userMapper.updateEntityFromForm(form, user);
         user = userRepository.save(user);
         return userMapper.toDTO(user);

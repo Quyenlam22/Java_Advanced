@@ -1,9 +1,10 @@
 package com.group_6.book_store.service;
 
 import com.group_6.book_store.dto.AuthResponseDTO;
+import com.group_6.book_store.entity.User;
 import com.group_6.book_store.form.UserLoginForm;
 import com.group_6.book_store.form.UserRegisterForm;
-import com.group_6.book_store.entity.User;
+import com.group_6.book_store.mapper.UserMapper;
 import com.group_6.book_store.repository.UserRepository;
 import com.group_6.book_store.util.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class AuthService {
 
@@ -23,80 +27,87 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
+    private final UserMapper userMapper;
 
     public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
                        AuthenticationManager authenticationManager, JwtUtil jwtUtil,
-                       UserDetailsService userDetailsService) {
+                       UserDetailsService userDetailsService, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
+        this.userMapper = userMapper;
     }
 
-    public AuthResponseDTO register(UserRegisterForm form) {
+    public Object register(UserRegisterForm form) {
+        // Kiểm tra username hoặc email đã tồn tại
         if (userRepository.findByUsername(form.getUsername()).isPresent()) {
-            throw new RuntimeException("Username already exists");
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Tài khoản đã tồn tại trên hệ thống");
+            return errorResponse;
         }
         if (userRepository.findByEmail(form.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already exists");
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Tài khoản đã tồn tại trên hệ thống");
+            return errorResponse;
         }
 
-        User user = new User();
-        user.setUsername(form.getUsername());
-        user.setEmail(form.getEmail());
+        // Ánh xạ từ form sang entity và mã hóa mật khẩu
+        User user = userMapper.toEntity(form);
         user.setPassword(passwordEncoder.encode(form.getPassword()));
-        user.setFullName(form.getFullName());
-        user.setAddress(form.getAddress());
-        user.setPhone(form.getPhone());
         try {
             user.setRole(User.Role.valueOf(form.getRole().toUpperCase()));
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid role: " + form.getRole());
+            user.setRole(User.Role.CUSTOMER); // Mặc định là CUSTOMER nếu role không hợp lệ
         }
         user = userRepository.save(user);
 
+        // Tạo token JWT
         String accessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getRole().name());
-        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
 
+        // Trả về AuthResponseDTO với định dạng yêu cầu
         return AuthResponseDTO.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
                 .role(user.getRole().name())
+                .fullName(user.getFullName())
+                .address(user.getAddress())
+                .phone(user.getPhone())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .accessToken(accessToken)
                 .build();
     }
 
     public AuthResponseDTO login(UserLoginForm form) {
+        // Xác thực người dùng
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(form.getUsername(), form.getPassword())
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        // Lấy thông tin người dùng
         UserDetails userDetails = userDetailsService.loadUserByUsername(form.getUsername());
-        String accessToken = jwtUtil.generateAccessToken(userDetails.getUsername(), userDetails.getAuthorities().stream()
-                .findFirst().get().getAuthority().replace("ROLE_", ""));
-        String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
-
-        return AuthResponseDTO.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .role(userDetails.getAuthorities().stream().findFirst().get().getAuthority().replace("ROLE_", ""))
-                .build();
-    }
-
-    public AuthResponseDTO refreshToken(String refreshToken) {
-        if (jwtUtil.isTokenExpired(refreshToken)) {
-            throw new RuntimeException("Refresh token expired");
-        }
-        String username = jwtUtil.extractUsername(refreshToken);
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(form.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        String newAccessToken = jwtUtil.generateAccessToken(username, user.getRole().name());
 
+        // Tạo access token
+        String accessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getRole().name());
+
+        // Trả về phản hồi
         return AuthResponseDTO.builder()
-                .accessToken(newAccessToken)
-                .refreshToken(refreshToken)
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
                 .role(user.getRole().name())
+                .fullName(user.getFullName())
+                .address(user.getAddress())
+                .phone(user.getPhone())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .accessToken(accessToken)
                 .build();
     }
 }

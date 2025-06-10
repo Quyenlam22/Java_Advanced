@@ -27,4 +27,7 @@ public class OrderItem {
 
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
+
+    @Column(name = "discount", nullable = false, precision = 5, scale = 2)
+    private BigDecimal discount = BigDecimal.ZERO;
 }

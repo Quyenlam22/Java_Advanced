@@ -21,24 +21,37 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
+    @Column(name = "phone", nullable = false)
+    private String phone;
+
+    @Column(name = "address", nullable = false)
+    private String address;
+
+    @Column(name = "cart_id")
+    private String cartId;
+
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private OrderStatus status = OrderStatus.PENDING;
+    @Column(name = "status", nullable = false)
+    private OrderStatus status = OrderStatus.UNPROCESSED;
 
-    @Column(name = "shipping_address", nullable = false, columnDefinition = "TEXT")
-    private String shippingAddress;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    public enum OrderStatus {
+        UNPROCESSED, PROCESSING, SHIPPED, DELIVERED, CANCELLED
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -49,9 +62,5 @@ public class Order {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-    public enum OrderStatus {
-        PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED
     }
 }
