@@ -17,6 +17,7 @@ public class BookDTO {
     private Long authorId;
     private String authorName;
     private String imageUrl;
+    private BigDecimal discount; // Thêm trường discount
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

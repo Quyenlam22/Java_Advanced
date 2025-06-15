@@ -24,4 +24,8 @@ public class BookUpdateForm {
 
     @Size(max = 255, message = "Image URL must not exceed 255 characters")
     private String imageUrl;
+
+    @DecimalMin(value = "0.0", message = "Discount must be non-negative")
+    @DecimalMax(value = "100.0", message = "Discount must not exceed 100%")
+    private BigDecimal discount; // Thêm trường discount
 }

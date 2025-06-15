@@ -9,5 +9,4 @@ public class OrderItemForm {
     private Long bookId;
     private Integer quantity;
     private BigDecimal unitPrice;
-    private BigDecimal discount;
 }

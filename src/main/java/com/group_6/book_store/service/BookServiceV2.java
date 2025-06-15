@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+
 @Service
 public class BookServiceV2 {
 
@@ -57,6 +59,10 @@ public class BookServiceV2 {
     @Transactional
     public BookDTO createBook(BookCreateForm form) {
         Book book = bookMapper.toEntity(form);
+        // Đảm bảo discount không vượt quá 100% hoặc âm
+        if (form.getDiscount() != null && (form.getDiscount().compareTo(BigDecimal.ZERO) < 0 || form.getDiscount().compareTo(new BigDecimal("100.00")) > 0)) {
+            throw new IllegalArgumentException("Discount must be between 0.00 and 100.00");
+        }
         if (form.getCategoryId() != null) {
             Category category = categoryRepository.findById(form.getCategoryId())
                     .orElseThrow(() -> new RuntimeException("Category not found with id: " + form.getCategoryId()));
@@ -77,8 +83,12 @@ public class BookServiceV2 {
                 .orElseThrow(() -> new RuntimeException("Book not found with id: " + id));
 
         // Chỉ cập nhật các trường được gửi trong form, các trường khác giữ nguyên
-        // Nhờ nullValuePropertyMappingStrategy = IGNORE trong BookMapper
         bookMapper.updateEntityFromForm(form, book);
+
+        // Kiểm tra discount
+        if (form.getDiscount() != null && (form.getDiscount().compareTo(BigDecimal.ZERO) < 0 || form.getDiscount().compareTo(new BigDecimal("100.00")) > 0)) {
+            throw new IllegalArgumentException("Discount must be between 0.00 and 100.00");
+        }
 
         // Cập nhật category nếu categoryId được gửi, nếu không thì giữ nguyên
         if (form.getCategoryId() != null) {

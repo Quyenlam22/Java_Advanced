@@ -28,6 +28,9 @@ public class OrderItem {
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
 
-    @Column(name = "discount", nullable = false, precision = 5, scale = 2)
+    @Column(precision = 5, scale = 2, nullable = false, columnDefinition = "DECIMAL(5,2) DEFAULT 0.00")
     private BigDecimal discount = BigDecimal.ZERO;
+
+    @Column(name = "item_sequence", nullable = false)
+    private Integer itemSequence; // Giữ lại để quản lý thứ tự
 }

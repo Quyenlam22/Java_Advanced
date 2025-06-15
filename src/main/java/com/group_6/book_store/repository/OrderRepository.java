@@ -8,12 +8,29 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.user LEFT JOIN FETCH o.orderItems oi LEFT JOIN FETCH oi.book")
+
+    /**
+     * Lấy tất cả các đơn hàng cùng với thông tin user, orderItems và book
+     * Sử dụng JOIN FETCH thay vì LEFT JOIN FETCH để tối ưu hóa khi chắc chắn mối quan hệ luôn tồn tại
+     */
+    @Query("SELECT o FROM Order o JOIN FETCH o.user JOIN FETCH o.orderItems oi JOIN FETCH oi.book")
     Page<Order> findAllWithDetails(Pageable pageable);
 
-    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.user LEFT JOIN FETCH o.orderItems oi LEFT JOIN FETCH oi.book WHERE o.user.id = :userId")
+    /**
+     * Lấy danh sách đơn hàng của một userId cụ thể cùng với thông tin user, orderItems và book
+     */
+    @Query("SELECT o FROM Order o JOIN FETCH o.user JOIN FETCH o.orderItems oi JOIN FETCH oi.book WHERE o.user.id = :userId")
     Page<Order> findByUserIdWithDetails(@Param("userId") Long userId, Pageable pageable);
 
-    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.user LEFT JOIN FETCH o.orderItems oi LEFT JOIN FETCH oi.book WHERE o.id = :id")
+    /**
+     * Lấy thông tin chi tiết của một đơn hàng dựa trên id
+     */
+    @Query("SELECT o FROM Order o JOIN FETCH o.user JOIN FETCH o.orderItems oi JOIN FETCH oi.book WHERE o.id = :id")
     Order findByIdWithDetails(@Param("id") Long id);
+
+    /**
+     * Đếm số lượng đơn hàng của một userId
+     */
+    long countByUserId(Long userId);
+    Page<Order> findByUserId(Long userId, Pageable pageable);
 }

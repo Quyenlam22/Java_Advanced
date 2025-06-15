@@ -13,30 +13,24 @@ import org.mapstruct.*;
 public interface OrderMapper {
 
     @Mapping(source = "user.id", target = "userId")
-    @Mapping(target = "userInfo", expression = "java(mapUserInfo(order))")
-    @Mapping(source = "cartId", target = "cartId")
+    @Mapping(source = "fullName", target = "userInfo.fullName")
+    @Mapping(source = "phone", target = "userInfo.phone")
+    @Mapping(source = "address", target = "userInfo.address")
+    @Mapping(source = "status", target = "status")
+    @Mapping(source = "orderItems", target = "orderItems")
     OrderDTO toDTO(Order order);
 
+    @Mapping(target = "orderItems", ignore = true)
+    Order toEntity(OrderCreateForm form);
+
+    @Mapping(source = "itemSequence", target = "id") // Ánh xạ itemSequence vào id
     @Mapping(source = "book.id", target = "bookId")
     @Mapping(source = "book.title", target = "bookTitle")
-    OrderItemDTO toItemDTO(OrderItem orderItem);
-
-    @Mapping(target = "orderItems", ignore = true)
-    @Mapping(source = "fullName", target = "fullName")
-    @Mapping(source = "phone", target = "phone")
-    @Mapping(source = "address", target = "address")
-    @Mapping(source = "cartId", target = "cartId")
-    Order toEntity(OrderCreateForm form);
+    @Mapping(source = "discount", target = "discount")
+    OrderItemDTO toOrderItemDTO(OrderItem orderItem);
 
     OrderItem toOrderItemEntity(OrderItemForm form);
 
+    @Mapping(target = "status", source = "status")
     void updateStatusFromForm(OrderStatusUpdateForm form, @MappingTarget Order order);
-
-    default OrderDTO.UserInfo mapUserInfo(Order order) {
-        OrderDTO.UserInfo userInfo = new OrderDTO.UserInfo();
-        userInfo.setFullName(order.getFullName());
-        userInfo.setPhone(order.getPhone());
-        userInfo.setAddress(order.getAddress());
-        return userInfo;
-    }
 }

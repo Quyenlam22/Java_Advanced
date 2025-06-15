@@ -38,6 +38,9 @@ public class Book {
     @Column(name = "image_url", length = 255)
     private String imageUrl;
 
+    @Column(name = "discount", precision = 5, scale = 2, nullable = false, columnDefinition = "DECIMAL(5,2) DEFAULT 0.00")
+    private BigDecimal discount = BigDecimal.ZERO; // Mặc định 0.00
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

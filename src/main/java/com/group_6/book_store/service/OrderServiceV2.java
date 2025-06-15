@@ -1,13 +1,14 @@
 package com.group_6.book_store.service;
 
 import com.group_6.book_store.dto.OrderDTO;
-import com.group_6.book_store.entity.*;
+import com.group_6.book_store.entity.Book;
+import com.group_6.book_store.entity.Order;
+import com.group_6.book_store.entity.OrderItem;
+import com.group_6.book_store.entity.User;
 import com.group_6.book_store.form.OrderCreateForm;
 import com.group_6.book_store.form.OrderItemForm;
-import com.group_6.book_store.form.OrderStatusUpdateForm;
 import com.group_6.book_store.mapper.OrderMapper;
 import com.group_6.book_store.repository.BookRepository;
-import com.group_6.book_store.repository.CartRepository;
 import com.group_6.book_store.repository.OrderRepository;
 import com.group_6.book_store.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -25,40 +26,19 @@ public class OrderServiceV2 {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
-    private final CartRepository cartRepository;
     private final OrderMapper orderMapper;
 
     public OrderServiceV2(OrderRepository orderRepository, UserRepository userRepository,
-                          BookRepository bookRepository, CartRepository cartRepository,
-                          OrderMapper orderMapper) {
+                          BookRepository bookRepository, OrderMapper orderMapper) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.bookRepository = bookRepository;
-        this.cartRepository = cartRepository;
         this.orderMapper = orderMapper;
     }
 
-    public Page<OrderDTO> getAllOrders(Pageable pageable) {
-        return orderRepository.findAllWithDetails(pageable)
+    public Page<OrderDTO> getOrdersByUserId(Long userId, Pageable pageable) {
+        return orderRepository.findByUserId(userId, pageable)
                 .map(orderMapper::toDTO);
-    }
-
-    public Page<OrderDTO> getMyOrders(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-        return orderRepository.findByUserIdWithDetails(user.getId(), pageable)
-                .map(orderMapper::toDTO);
-    }
-
-    public OrderDTO getOrder(Long id, Long userId) {
-        Order order = orderRepository.findByIdWithDetails(id);
-        if (order == null) {
-            throw new RuntimeException("Order not found with id: " + id);
-        }
-        if (!order.getUser().getId().equals(userId)) {
-            throw new RuntimeException("You can only view your own orders");
-        }
-        return orderMapper.toDTO(order);
     }
 
     @Transactional
@@ -66,83 +46,53 @@ public class OrderServiceV2 {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
 
-        Order order = orderMapper.toEntity(form);
+        Order order = new Order();
         order.setUser(user);
         order.setStatus(Order.OrderStatus.UNPROCESSED);
+        order.setFullName(form.getFullName());
+        order.setPhone(form.getPhone());
+        order.setAddress(form.getAddress());
+        order.setCartId(form.getCartId()); // Thêm ánh xạ cartId
+
+        // Kiểm tra số lượng đơn hàng hiện tại để xác định itemSequence
+        long existingOrderCount = orderRepository.countByUserId(userId);
+        int itemSequenceStart = (existingOrderCount == 0) ? 1 : 1; // Bắt đầu từ 1 cho mỗi đơn hàng mới
 
         List<OrderItem> orderItems = new ArrayList<>();
         BigDecimal totalAmount = BigDecimal.ZERO;
+        int itemSequence = itemSequenceStart;
 
         for (OrderItemForm itemForm : form.getOrderItems()) {
             Book book = bookRepository.findById(itemForm.getBookId())
                     .orElseThrow(() -> new RuntimeException("Book not found with id: " + itemForm.getBookId()));
+
             if (book.getStock() < itemForm.getQuantity()) {
                 throw new RuntimeException("Insufficient stock for book: " + book.getTitle());
             }
+
+            // Kiểm tra giá unitPrice khớp với giá sách
             if (book.getPrice().compareTo(itemForm.getUnitPrice()) != 0) {
                 throw new RuntimeException("Unit price does not match book price for: " + book.getTitle());
             }
-            OrderItem orderItem = orderMapper.toOrderItemEntity(itemForm);
-            orderItem.setOrder(order);
-            orderItem.setBook(book);
-            orderItems.add(orderItem);
 
-            // Tính toán giá sau khi áp dụng discount
-            BigDecimal discountedPrice = itemForm.getUnitPrice()
-                    .multiply(BigDecimal.ONE.subtract(itemForm.getDiscount().divide(BigDecimal.valueOf(100))));
-            totalAmount = totalAmount.add(discountedPrice.multiply(new BigDecimal(itemForm.getQuantity())));
-
-            book.setStock(book.getStock() - itemForm.getQuantity());
-            bookRepository.save(book);
-        }
-        order.setOrderItems(orderItems);
-        order.setTotalAmount(totalAmount);
-        order = orderRepository.save(order);
-        return orderMapper.toDTO(order);
-    }
-
-    @Transactional
-    public OrderDTO createOrderFromCart(Long userId, String shippingAddress) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
-
-        Cart cart = cartRepository.findByUserIdWithItems(user.getId())
-                .orElseThrow(() -> new RuntimeException("Cart not found for user id: " + userId));
-
-        if (cart.getCartItems().isEmpty()) {
-            throw new RuntimeException("Cart is empty");
-        }
-
-        Order order = new Order();
-        order.setUser(user);
-        order.setStatus(Order.OrderStatus.UNPROCESSED);
-        order.setFullName(cart.getUser().getFullName()); // Giả sử User có trường fullName
-        order.setPhone(cart.getUser().getPhone());       // Giả sử User có trường phone
-        order.setAddress(shippingAddress);
-        order.setCartId(cart.getId().toString());
-
-        List<OrderItem> orderItems = new ArrayList<>();
-        BigDecimal totalAmount = BigDecimal.ZERO;
-
-        for (CartItem cartItem : cart.getCartItems()) {
-            Book book = cartItem.getBook();
-            if (book.getStock() < cartItem.getQuantity()) {
-                throw new RuntimeException("Insufficient stock for book: " + book.getTitle());
-            }
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setBook(book);
-            orderItem.setQuantity(cartItem.getQuantity());
-            orderItem.setUnitPrice(book.getPrice());
-            orderItem.setDiscount(BigDecimal.ZERO); // Mặc định không có discount từ cart
+            orderItem.setQuantity(itemForm.getQuantity());
+            orderItem.setUnitPrice(itemForm.getUnitPrice());
+            orderItem.setDiscount(book.getDiscount());
+            orderItem.setItemSequence(itemSequence++);
+
+            // Tính discount và tổng tiền
+            BigDecimal discountAmount = orderItem.getUnitPrice()
+                    .multiply(orderItem.getDiscount().divide(new BigDecimal("100"), 2, BigDecimal.ROUND_HALF_UP));
+            BigDecimal discountedPrice = orderItem.getUnitPrice().subtract(discountAmount);
+            totalAmount = totalAmount.add(discountedPrice.multiply(new BigDecimal(itemForm.getQuantity())));
+
             orderItems.add(orderItem);
 
-            // Tính giá sau discount (nếu có)
-            BigDecimal discountedPrice = book.getPrice()
-                    .multiply(BigDecimal.ONE.subtract(orderItem.getDiscount().divide(BigDecimal.valueOf(100))));
-            totalAmount = totalAmount.add(discountedPrice.multiply(new BigDecimal(cartItem.getQuantity())));
-
-            book.setStock(book.getStock() - cartItem.getQuantity());
+            // Cập nhật stock
+            book.setStock(book.getStock() - itemForm.getQuantity());
             bookRepository.save(book);
         }
 
@@ -150,25 +100,6 @@ public class OrderServiceV2 {
         order.setTotalAmount(totalAmount);
         order = orderRepository.save(order);
 
-        // Clear cart after order creation
-        cart.getCartItems().clear();
-        cartRepository.save(cart);
-
         return orderMapper.toDTO(order);
-    }
-
-    public OrderDTO updateOrderStatus(Long id, OrderStatusUpdateForm form) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
-        orderMapper.updateStatusFromForm(form, order);
-        order = orderRepository.save(order);
-        return orderMapper.toDTO(order);
-    }
-
-    public void deleteOrder(Long id) {
-        if (!orderRepository.existsById(id)) {
-            throw new RuntimeException("Order not found with id: " + id);
-        }
-        orderRepository.deleteById(id);
     }
 }
